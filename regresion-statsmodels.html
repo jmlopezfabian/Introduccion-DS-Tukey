@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regresión con Statsmodels — Ciencia de Datos 2026</title>
+<title>Regresión con Statsmodels — Clases DS Tukey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -18,8 +18,11 @@
   .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
   .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
   .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
-  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
+  aside{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto}
+  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
+  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
   .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
   .toc ul{list-style:none}.toc li{margin-bottom:1px}
   .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
@@ -92,11 +95,16 @@
     <div class="page-head">
       <div class="page-mod">06 — statsmodels</div>
       <h1>Regresión con Statsmodels</h1>
-      <p class="lead">Statsmodels es una biblioteca de Python orientada a la inferencia estadística. Su implementación de OLS (Ordinary Least Squares) no solo ajusta el modelo, sino que proporciona un reporte estadístico completo con coeficientes, errores estándar, p-valores y métricas de ajuste.</p>
+      <p class="lead">Implementación de OLS mediante statsmodels. A diferencia de la construcción manual, esta biblioteca produce un reporte estadístico completo: coeficientes, errores estándar, p-valores, R² e intervalos de confianza.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/regresion_lib.ipynb">notebooks/regresion_lib.ipynb</a>
     </div>
 
     <h2 id="intro">Introducción</h2>
-    <p>A diferencia de la implementación manual que hicimos antes, statsmodels trata la regresión como un <strong>problema estadístico</strong>: no solo nos interesa la predicción, sino también si los coeficientes son estadísticamente significativos y si los supuestos del modelo se cumplen.</p>
+    <p>La implementación manual construida en el módulo anterior estima los parámetros pero no provee información sobre su significancia estadística. Statsmodels aborda la regresión como un problema de inferencia: además de los estimadores, entrega toda la información necesaria para validar el modelo bajo los supuestos de OLS.</p>
 
     <pre><code class="language-python">import pandas as pd
 import numpy as np

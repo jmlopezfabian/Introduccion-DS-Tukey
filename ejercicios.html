@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ejercicios Prácticos — Ciencia de Datos 2026</title>
+<title>Ejercicios Prácticos — Clases DS Tukey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -18,8 +18,11 @@
   .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
   .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
   .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
-  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
+  aside{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto}
+  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
+  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
   .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
   .toc ul{list-style:none}.toc li{margin-bottom:1px}
   .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
@@ -88,11 +91,16 @@
     <div class="page-head">
       <div class="page-mod">-- / ejercicios</div>
       <h1>Ejercicios Prácticos</h1>
-      <p class="lead">Dos ejercicios para consolidar los conceptos vistos en clase: análisis de residuos de regresión y construcción de una aplicación interactiva con Streamlit.</p>
+      <p class="lead">Dos problemas de aplicación: análisis de residuos sobre modelos de regresión lineal y no lineal, y desarrollo de una herramienta interactiva de análisis de correlación con Streamlit.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/ejercicios/ejercicios_practicos.ipynb">notebooks/ejercicios/ejercicios_practicos.ipynb</a>
     </div>
 
     <h2 id="intro">Introducción</h2>
-    <p>Estos ejercicios integran varios temas del curso. El primero profundiza en el análisis de residuos para entender cuándo un modelo lineal es o no adecuado. El segundo combina análisis estadístico con desarrollo de una herramienta interactiva.</p>
+    <p>El primer ejercicio aplica los conceptos de regresión lineal sobre datos con distintas estructuras de relación. El segundo requiere integrar análisis estadístico dentro de una aplicación web interactiva.</p>
 
     <h2 id="ej1">Ejercicio 1 — Análisis de Residuos de Regresión Simple</h2>
 

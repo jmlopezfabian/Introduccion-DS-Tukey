@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regresión Avanzada — Ciencia de Datos 2026</title>
+<title>Regresión Avanzada — Clases DS Tukey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -18,8 +18,11 @@
   .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
   .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
   .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
-  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
+  aside{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto}
+  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
+  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
   .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
   .toc ul{list-style:none}.toc li{margin-bottom:1px}
   .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
@@ -85,11 +88,16 @@
     <div class="page-head">
       <div class="page-mod">07 — avanzado</div>
       <h1>Regresión Avanzada</h1>
-      <p class="lead">En la práctica, los datasets contienen variables categóricas que hay que transformar antes de entrenar un modelo. Además, para evaluar el modelo correctamente necesitamos estrategias de validación como el train/test split y la validación cruzada.</p>
+      <p class="lead">Extensión del modelo de regresión lineal para incluir variables categóricas mediante one-hot encoding, y evaluación del rendimiento generalizable mediante train/test split y validación cruzada.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/regresion_final.ipynb">notebooks/regresion_final.ipynb</a>
     </div>
 
     <h2 id="intro">Introducción</h2>
-    <p>Los modelos de regresión lineal solo trabajan con números. Cuando nuestros datos tienen columnas como <code>"study_method"</code> (coaching, online videos, self-study…), necesitamos convertirlas a representaciones numéricas. El método más común es el <strong>one-hot encoding</strong>.</p>
+    <p>Los modelos lineales requieren que todas las variables de entrada sean numéricas. Las variables categóricas deben transformarse antes del ajuste. Adicionalmente, la evaluación del modelo sobre los mismos datos de entrenamiento sobreestima el rendimiento real; se requieren técnicas de validación que estimen la capacidad de generalización.</p>
 
     <h2 id="categoricas">Variables categóricas</h2>
 

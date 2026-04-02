@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regresión Lineal Simple — Ciencia de Datos 2026</title>
+<title>Regresión Lineal Simple — Clases DS Tukey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -18,8 +18,11 @@
   .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
   .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
   .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
-  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
+  aside{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto}
+  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
+  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
   .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
   .toc ul{list-style:none}.toc li{margin-bottom:1px}
   .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
@@ -86,12 +89,16 @@
     <div class="page-head">
       <div class="page-mod">04 — regresión simple</div>
       <h1>Regresión Lineal Simple</h1>
-      <p class="lead">La regresión lineal simple modela la relación entre una variable independiente <em>x</em> y una variable dependiente <em>y</em> ajustando una línea recta que minimiza los errores de predicción.</p>
+      <p class="lead">Modelo que estima la relación lineal entre una variable independiente y una dependiente. Se construye desde cero: función de pérdida ECM, búsqueda de parámetros y solución analítica por mínimos cuadrados.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/regresion.ipynb">notebooks/regresion.ipynb</a>
     </div>
 
     <h2 id="intro">Introducción</h2>
-    <p>El objetivo de la regresión lineal es encontrar los parámetros de una línea recta que <strong>mejor explique</strong> la relación entre dos variables. Una vez encontrada esa recta, podemos usarla para predecir el valor de <em>y</em> dado un nuevo valor de <em>x</em>.</p>
-    <p>Por ejemplo: ¿cuánto subirá la calificación de un estudiante si estudia una hora más? La regresión lineal nos da esa respuesta en términos numéricos.</p>
+    <p>El objetivo es encontrar los parámetros \(m\) y \(b\) de una recta \(\hat{y} = mx + b\) que minimice el error total entre los valores observados y los predichos. Conocidos esos parámetros, el modelo permite estimar \(y\) para valores de \(x\) no observados.</p>
 
     <h2 id="recta">La recta y = mx + b</h2>
     <p>Una línea recta en un plano 2D queda completamente definida por dos parámetros:</p>

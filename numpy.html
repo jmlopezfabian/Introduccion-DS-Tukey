@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NumPy — Ciencia de Datos 2026</title>
+<title>NumPy — Clases DS Tukey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -30,10 +30,13 @@
   .nav-current{color:var(--text);font-weight:500}
 
   /* LAYOUT */
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
 
   /* SIDEBAR */
-  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  aside{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto}
+  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
+  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
   .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
   .toc ul{list-style:none}
   .toc li{margin-bottom:1px}
@@ -112,11 +115,16 @@
     <div class="page-head">
       <div class="page-mod">01 — numpy</div>
       <h1>NumPy</h1>
-      <p class="lead">NumPy es la biblioteca fundamental para cómputo numérico en Python. Provee el objeto <code>ndarray</code>, operaciones vectorizadas eficientes y funciones de álgebra lineal que son la base de casi todo el ecosistema científico de Python.</p>
+      <p class="lead">Biblioteca para cómputo numérico en Python. Cubre el objeto <code>ndarray</code>, operaciones vectorizadas y las funciones de álgebra lineal relevantes para regresión.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/numpy.ipynb">notebooks/numpy.ipynb</a>
     </div>
 
     <h2 id="intro">Introducción</h2>
-    <p>Cuando trabajamos con listas de Python y queremos operar sobre cada elemento, normalmente usamos un ciclo <code>for</code>. NumPy elimina esa necesidad: sus <strong>operaciones vectorizadas</strong> aplican cálculos sobre todos los elementos del arreglo de manera simultánea, aprovechando código C optimizado por debajo y reduciendo significativamente el tiempo de ejecución.</p>
+    <p>Las operaciones sobre listas de Python requieren ciclos explícitos. NumPy evita esto mediante <strong>operaciones vectorizadas</strong>: el cálculo se aplica simultáneamente sobre todos los elementos del arreglo usando rutinas de C compiladas. Esto reduce el tiempo de ejecución de forma significativa conforme crece el tamaño de los datos.</p>
 
     <div class="def">
       <div class="def-label">Concepto clave</div>
