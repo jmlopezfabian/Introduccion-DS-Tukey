@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regresión Avanzada — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Regresión Avanzada</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#categoricas">Variables categóricas</a></li>
+      <li class="sub"><a href="#one-hot">One-hot encoding</a></li>
+      <li class="sub"><a href="#dummies">pd.get_dummies</a></li>
+      <li><a href="#train-test">Train / Test Split</a></li>
+      <li><a href="#kfold">K-Fold Cross Validation</a></li>
+      <li><a href="#loocv">LOOCV</a></li>
+      <li><a href="#comparacion">Comparación de métricas</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">07 — avanzado</div>
+      <h1>Regresión Avanzada</h1>
+      <p class="lead">En la práctica, los datasets contienen variables categóricas que hay que transformar antes de entrenar un modelo. Además, para evaluar el modelo correctamente necesitamos estrategias de validación como el train/test split y la validación cruzada.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>Los modelos de regresión lineal solo trabajan con números. Cuando nuestros datos tienen columnas como <code>"study_method"</code> (coaching, online videos, self-study…), necesitamos convertirlas a representaciones numéricas. El método más común es el <strong>one-hot encoding</strong>.</p>
+
+    <h2 id="categoricas">Variables categóricas</h2>
+
+    <h3 id="one-hot">One-hot encoding</h3>
+    <p>El one-hot encoding convierte una variable categórica con <em>k</em> categorías en <em>k − 1</em> columnas binarias (0 o 1). Se elimina una columna para evitar multicolinealidad perfecta (problema conocido como la <em>trampa de las variables dummy</em>).</p>
+
+    <p>Por ejemplo, la columna <code>study_method</code> con 5 categorías se convierte en 4 columnas binarias. La categoría omitida es la <em>categoría de referencia</em>:</p>
+    <pre><code class="language-text">study_method  → group_study | mixed | online_videos | self_study
+coaching      →      0      |   0   |       0       |     0
+group study   →      1      |   0   |       0       |     0
+mixed         →      0      |   1   |       0       |     0
+online videos →      0      |   0   |       1       |     0
+self-study    →      0      |   0   |       0       |     1</code></pre>
+
+    <h3 id="dummies">pd.get_dummies</h3>
+    <pre><code class="language-python">import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+df = pd.read_csv("data/csvs/examenes.csv")
+
+# Codificar una variable categórica
+df_encoded = pd.get_dummies(df, columns=["study_method"],
+                             dtype=int, drop_first=True)
+
+# Verificar las nuevas columnas
+print(df_encoded.columns.tolist())</code></pre>
+
+    <pre><code class="language-python"># Definir variables predictivas
+var_objetivo  = "exam_score"
+vars_base     = ["study_hours"]
+
+# Nombres de las columnas nuevas (drop_first=True elimina la primera)
+n_nuevas      = len(df["study_method"].unique()) - 1
+cols_nuevas   = list(df_encoded.columns[-n_nuevas:])
+vars_pred     = vars_base + cols_nuevas
+
+X = df_encoded[vars_pred]
+y = df_encoded[var_objetivo]
+
+print(vars_pred)
+# ['study_hours', 'study_method_group study', 'study_method_mixed',
+#  'study_method_online videos', 'study_method_self-study']</code></pre>
+
+    <h2 id="train-test">Train / Test Split</h2>
+    <p>Para evaluar el modelo de forma honesta, necesitamos datos que el modelo <strong>nunca haya visto</strong> durante el entrenamiento. El train/test split divide el dataset en dos partes:</p>
+    <ul>
+      <li><strong>Train (entrenamiento):</strong> el modelo aprende los parámetros con estos datos</li>
+      <li><strong>Test (prueba):</strong> se evalúa el rendimiento del modelo con datos nuevos</li>
+    </ul>
+    <pre><code class="language-python">from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+X = np.array(X)
+y = np.array(y)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1
+)
+
+# Entrenar solo con train
+model  = sm.OLS(y_train, X_train).fit()
+
+# Evaluar en ambos conjuntos
+pred_train = model.predict(X_train)
+pred_test  = model.predict(X_test)
+
+rmse_train = mean_squared_error(y_train, pred_train) ** 0.5
+rmse_test  = mean_squared_error(y_test,  pred_test)  ** 0.5
+
+print(f"RMSE Train: {rmse_train:.2f}")
+print(f"RMSE Test:  {rmse_test:.2f}")</code></pre>
+
+    <div class="def">
+      <div class="def-label">Overfitting vs Underfitting</div>
+      <p>Si el RMSE de train es mucho menor que el de test, el modelo memorizó los datos de entrenamiento (<strong>overfitting</strong>). Si ambos son altos, el modelo no captura la señal en los datos (<strong>underfitting</strong>). Un buen modelo tiene RMSEs similares y bajos en ambos conjuntos.</p>
+    </div>
+
+    <h2 id="kfold">K-Fold Cross Validation</h2>
+    <p>Un solo train/test split puede dar resultados que dependen de cómo se partieron los datos al azar. La <strong>validación cruzada K-Fold</strong> divide los datos en <em>k</em> partes iguales, entrena el modelo <em>k</em> veces usando <em>k−1</em> partes para entrenar y 1 para evaluar, y promedia las métricas. Esto da una estimación más robusta del rendimiento real.</p>
+
+    <div class="formula">\[ RMSE_{CV} = \sqrt{\frac{1}{k}\sum_{i=1}^{k} RMSE_i} \]</div>
+
+    <pre><code class="language-python">from sklearn.model_selection import KFold
+
+kf = KFold(n_splits=10, shuffle=True, random_state=42)
+
+lista_rmse_train = []
+lista_rmse_test  = []
+
+for train_idx, test_idx in kf.split(X):
+    X_train, X_test = X[train_idx], X[test_idx]
+    y_train, y_test = y[train_idx], y[test_idx]
+
+    model = sm.OLS(y_train, X_train).fit()
+
+    pred_train = model.predict(X_train)
+    pred_test  = model.predict(X_test)
+
+    lista_rmse_train.append(mean_squared_error(y_train, pred_train) ** 0.5)
+    lista_rmse_test.append(mean_squared_error(y_test,  pred_test)  ** 0.5)
+
+rmse_train_cv = np.array(lista_rmse_train)
+rmse_test_cv  = np.array(lista_rmse_test)
+
+print(f"RMSE Train CV — Media: {rmse_train_cv.mean():.2f}, Std: {rmse_train_cv.std():.2f}")
+print(f"RMSE Test  CV — Media: {rmse_test_cv.mean():.2f},  Std: {rmse_test_cv.std():.2f}")</code></pre>
+
+    <h2 id="loocv">Leave-One-Out Cross Validation (LOOCV)</h2>
+    <p>El LOOCV es el caso extremo de K-Fold donde k = n: cada observación actúa como su propio conjunto de prueba. Es muy preciso pero computacionalmente costoso en datasets grandes.</p>
+    <pre><code class="language-python">from sklearn.model_selection import LeaveOneOut
+
+loo = LeaveOneOut()
+lista_rmse_loo = []
+
+for train_idx, test_idx in loo.split(X):
+    X_train, X_test = X[train_idx], X[test_idx]
+    y_train, y_test = y[train_idx], y[test_idx]
+
+    model = sm.OLS(y_train, X_train).fit()
+    pred  = model.predict(X_test)
+    lista_rmse_loo.append(mean_squared_error(y_test, pred) ** 0.5)
+
+rmse_loo = np.array(lista_rmse_loo)
+print(f"RMSE LOOCV — Media: {rmse_loo.mean():.2f}, Std: {rmse_loo.std():.2f}")</code></pre>
+
+    <h2 id="comparacion">Comparación de métricas</h2>
+    <p>Resultados obtenidos con el dataset de exámenes (20,000 registros, 5 variables predictivas):</p>
+    <pre><code class="language-text">Método               RMSE Train   RMSE Test
+----------------------------------------------
+Train/Test (70/30)   20.36        20.52
+K-Fold (k=10)        20.41        20.41
+LOOCV                  —          16.01</code></pre>
+
+    <div class="def">
+      <div class="def-label">¿Qué método usar?</div>
+      <p>Para la mayoría de los proyectos, <strong>K-Fold con k=5 o k=10</strong> ofrece el mejor equilibrio entre precisión y tiempo de cómputo. El LOOCV se reserva para datasets pequeños donde cada dato cuenta. El split simple es útil para una evaluación rápida inicial.</p>
+    </div>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Resultado del modelo con variables categóricas</summary>
+      <div class="dbody">
+        <p>Con el encoding de <code>study_method</code> y <code>study_hours</code>, el summary muestra algo interesante:</p>
+        <pre><code class="language-text">                                 coef    std err    t      P>|t|
+-----------------------------------------------------------------
+study_hours                    10.13      0.059   171.8    0.000
+study_method_group study       20.88      0.452    46.2    0.000
+study_method_mixed             23.15      0.455    50.8    0.000
+study_method_online videos     18.94      0.452    41.9    0.000
+study_method_self-study        18.68      0.446    41.9    0.000</code></pre>
+        <p>Los coeficientes de las variables de método de estudio representan <em>cuántos puntos más obtiene ese método respecto a la categoría de referencia (coaching)</em>. Todos son positivos y significativos.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

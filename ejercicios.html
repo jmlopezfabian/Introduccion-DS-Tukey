@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejercicios Prácticos — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .ejercicio-header{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+  .ejercicio-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:.5px;text-transform:uppercase}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Ejercicios Prácticos</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#ej1">Ejercicio 1</a></li>
+      <li class="sub"><a href="#ej1-datos">Generación de datos</a></li>
+      <li class="sub"><a href="#ej1-tareas">Tareas</a></li>
+      <li class="sub"><a href="#ej1-preguntas">Preguntas</a></li>
+      <li><a href="#ej2">Ejercicio 2</a></li>
+      <li class="sub"><a href="#ej2-streamlit">Streamlit</a></li>
+      <li class="sub"><a href="#ej2-tareas">Tareas</a></li>
+      <li><a href="#entrega">Entrega</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">-- / ejercicios</div>
+      <h1>Ejercicios Prácticos</h1>
+      <p class="lead">Dos ejercicios para consolidar los conceptos vistos en clase: análisis de residuos de regresión y construcción de una aplicación interactiva con Streamlit.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>Estos ejercicios integran varios temas del curso. El primero profundiza en el análisis de residuos para entender cuándo un modelo lineal es o no adecuado. El segundo combina análisis estadístico con desarrollo de una herramienta interactiva.</p>
+
+    <h2 id="ej1">Ejercicio 1 — Análisis de Residuos de Regresión Simple</h2>
+
+    <h3 id="ej1-datos">Generación de datos</h3>
+    <p>El siguiente código genera dos conjuntos de datos. <strong>No hay que modificarlo</strong>:</p>
+    <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+
+# Conjunto 1: RELACIÓN LINEAL
+n1 = 100
+x1 = np.linspace(0, 10, n1)
+m_real, b_real = 2.0, 3.0
+y1 = m_real * x1 + b_real + np.random.normal(0, 1.5, n1)
+
+# Conjunto 2: RELACIÓN NO LINEAL (cuadrática)
+n2 = 100
+x2 = np.linspace(0, 10, n2)
+y2 = 0.5 * x2**2 - 2 * x2 + 5 + np.random.normal(0, 2.0, n2)
+
+# Visualización de los datos originales
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+axes[0].scatter(x1, y1, alpha=0.6)
+axes[0].set_title("Conjunto 1: Relación lineal")
+axes[1].scatter(x2, y2, alpha=0.6, color="#f06595")
+axes[1].set_title("Conjunto 2: Relación cuadrática")
+plt.tight_layout()
+plt.show()</code></pre>
+
+    <h3 id="ej1-tareas">Tareas</h3>
+    <p>Para <strong>cada uno de los dos conjuntos de datos</strong>:</p>
+    <ol>
+      <li>Implementar la regresión lineal simple usando las fórmulas de mínimos cuadrados con NumPy (sin usar <code>sklearn</code> ni <code>statsmodels</code>)</li>
+      <li>Calcular los valores predichos \(\hat{y}\)</li>
+      <li>Calcular los residuos: \(e_i = y_i - \hat{y}_i\)</li>
+      <li>Crear un histograma de los residuos</li>
+      <li>Crear un scatter plot de <strong>residuos vs valores predichos</strong></li>
+      <li>Calcular las métricas: ECM, RECM y R²</li>
+    </ol>
+
+    <p>Las fórmulas que debes implementar:</p>
+    <div class="formula">
+      \[ m = \frac{n\sum x_i y_i - \sum x_i \sum y_i}{n\sum x_i^2 - \left(\sum x_i\right)^2} \qquad b = \bar{y} - m\bar{x} \]
+    </div>
+    <div class="formula">
+      \[ R^2 = 1 - \frac{SS_{res}}{SS_{tot}} \quad \text{donde} \quad SS_{res} = \sum(y_i - \hat{y}_i)^2,\quad SS_{tot} = \sum(y_i - \bar{y})^2 \]
+    </div>
+
+    <details class="dive">
+      <summary><span class="tag">Pistas</span> Ayuda para la implementación</summary>
+      <div class="dbody">
+        <pre><code class="language-python"># Pendiente con numpy
+n = len(x1)
+m = (n * (x1 * y1).sum() - x1.sum() * y1.sum()) / \
+    (n * (x1**2).sum() - x1.sum()**2)
+
+# Ordenada al origen
+b = y1.mean() - m * x1.mean()
+
+# Predicciones y residuos
+y_hat    = m * x1 + b
+residuos = y1 - y_hat
+
+# Usar plt.subplots() para comparar ambos conjuntos lado a lado</code></pre>
+      </div>
+    </details>
+
+    <h3 id="ej1-preguntas">Preguntas de análisis</h3>
+    <p>Una vez completada la implementación, responde en el notebook:</p>
+    <ol>
+      <li>¿Qué forma tienen los histogramas de residuos en cada conjunto? ¿Son simétricos y centrados en cero?</li>
+      <li>En el scatter plot de residuos vs valores predichos, ¿hay algún patrón visible en el conjunto 2? ¿Qué forma tiene ese patrón?</li>
+      <li>¿Cuál modelo tiene mejor R²? ¿Cuál tiene menor ECM? ¿Tiene sentido ese resultado?</li>
+      <li>¿Qué te dice el gráfico de residuos sobre si el modelo lineal es adecuado para datos cuadráticos?</li>
+      <li>¿Cómo usarías el análisis de residuos para detectar problemas en un modelo real?</li>
+    </ol>
+
+    <h2 id="ej2">Ejercicio 2 — Análisis de Correlación con Streamlit</h2>
+
+    <h3 id="ej2-streamlit">¿Qué es Streamlit?</h3>
+    <p>Streamlit es una biblioteca de Python que permite construir aplicaciones web interactivas de análisis de datos con muy poco código. No se necesita conocimiento de HTML ni JavaScript.</p>
+    <pre><code class="language-bash"># Instalar
+pip install streamlit
+
+# Ejecutar una aplicación
+streamlit run mi_app.py</code></pre>
+
+    <p>Streamlit proporciona componentes interactivos como sliders, selectboxes y botones que se integran directamente con Python:</p>
+    <pre><code class="language-python">import streamlit as st
+import pandas as pd
+
+st.title("Mi aplicación")
+
+opcion = st.selectbox("Elige una columna", ["study_hours", "exam_score"])
+umbral = st.slider("Umbral de correlación", 0.0, 1.0, 0.5)
+cols   = st.multiselect("Variables", ["study_hours", "sleep_hours", "exam_score"])</code></pre>
+
+    <h3 id="ej2-tareas">Tareas</h3>
+    <p>Crea un archivo <code>correlacion_app.py</code> con una aplicación Streamlit que incluya:</p>
+    <ol>
+      <li><strong>Selector de tipo de correlación:</strong> Pearson, Spearman o Kendall usando <code>st.selectbox()</code></li>
+      <li><strong>Selector múltiple de variables numéricas</strong> con <code>st.multiselect()</code></li>
+      <li><strong>Slider de umbral</strong> para mostrar solo correlaciones mayores a ese valor con <code>st.slider()</code></li>
+      <li><strong>Comparación entre grupos:</strong> selector de variable categórica (género, método de estudio) y comparación de las matrices de correlación entre grupos con <code>df.groupby()</code></li>
+      <li><strong>Visualización</strong> con <code>sns.heatmap()</code> y <code>st.pyplot()</code></li>
+      <li><strong>Exportar a CSV</strong> con <code>st.download_button()</code></li>
+    </ol>
+
+    <details class="ex">
+      <summary><span class="tag">Código base</span> Estructura sugerida para la aplicación</summary>
+      <div class="dbody">
+        <pre><code class="language-python">import streamlit as st
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+st.title("Análisis de Correlación Avanzado")
+
+# Cargar datos
+df = pd.read_csv("data/csvs/examenes.csv")
+variables_num = df.select_dtypes(include=[np.number]).columns.tolist()
+
+# Sidebar con controles
+with st.sidebar:
+    st.header("Configuración")
+    tipo_corr = st.selectbox("Tipo de correlación",
+                              ["pearson", "spearman", "kendall"])
+    vars_sel  = st.multiselect("Variables a analizar",
+                                variables_num, default=variables_num[:4])
+    umbral    = st.slider("Umbral mínimo de correlación",
+                           0.0, 1.0, 0.0, step=0.05)
+    var_grupo = st.selectbox("Comparar por grupo",
+                              ["gender", "study_method", "exam_difficulty"])
+
+# Sección 1: Correlación general
+st.header("Matriz de Correlación General")
+if vars_sel:
+    # Tu código aquí: calcular y visualizar la matriz de correlación
+
+# Sección 2: Comparación entre grupos
+st.header(f"Comparación por {var_grupo}")
+# Tu código aquí: groupby y heatmaps por grupo
+
+# Sección 3: Exportar
+st.header("Exportar")
+# Tu código aquí: st.download_button()</code></pre>
+        <p><strong>Preguntas de investigación:</strong></p>
+        <ul>
+          <li>¿La correlación entre horas de estudio y calificación cambia según el género?</li>
+          <li>¿Los resultados varían entre Pearson, Spearman y Kendall?</li>
+          <li>¿Cuándo preferirías Spearman sobre Pearson?</li>
+        </ul>
+      </div>
+    </details>
+
+    <h2 id="entrega">Entrega</h2>
+    <div class="def">
+      <div class="def-label">Requisitos de entrega</div>
+      <p>Ejercicio 1: notebook <code>ejercicios_practicos.ipynb</code> con todas las celdas ejecutadas y las respuestas escritas en markdown.<br><br>
+      Ejercicio 2: archivo <code>correlacion_app.py</code> funcional que se pueda ejecutar con <code>streamlit run correlacion_app.py</code>.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

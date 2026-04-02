@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis Exploratorio — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Análisis Exploratorio (EDA)</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">¿Qué es el EDA?</a></li>
+      <li><a href="#carga">Carga y exploración</a></li>
+      <li class="sub"><a href="#head-describe">head y describe</a></li>
+      <li class="sub"><a href="#tipos-datos">Tipos de datos</a></li>
+      <li><a href="#filtros">Filtros booleanos</a></li>
+      <li><a href="#combinacion">Combinación de variables</a></li>
+      <li><a href="#agrupaciones">Agrupaciones (groupby)</a></li>
+      <li><a href="#correlacion">Correlación de Pearson</a></li>
+      <li><a href="#flujo">Flujo EDA completo</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">03 — eda</div>
+      <h1>Análisis Exploratorio de Datos</h1>
+      <p class="lead">El Análisis Exploratorio de Datos (EDA) es el proceso de investigar un conjunto de datos para entender su estructura, detectar patrones, identificar anomalías y generar hipótesis. Es el primer paso obligatorio antes de cualquier modelo.</p>
+    </div>
+
+    <h2 id="intro">¿Qué es el EDA?</h2>
+    <p>Antes de construir un modelo predictivo, necesitamos entender los datos. El EDA responde preguntas como:</p>
+    <ul>
+      <li>¿Cuántos registros y columnas hay?</li>
+      <li>¿Hay valores faltantes o duplicados?</li>
+      <li>¿Cómo se distribuyen las variables numéricas?</li>
+      <li>¿Qué relaciones existen entre variables?</li>
+      <li>¿Hay grupos o segmentos en los datos?</li>
+    </ul>
+
+    <h2 id="carga">Carga y exploración inicial</h2>
+
+    <h3 id="head-describe">head, tail y describe</h3>
+    <p>Los primeros métodos que se usan al recibir un dataset nuevo:</p>
+    <pre><code class="language-python">import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("data/csvs/examenes.csv")
+
+df.head()      # primeras 5 filas
+df.tail()      # últimas 5 filas
+df.shape       # (20000, 13) — filas y columnas
+df.info()      # tipos de datos y valores nulos
+df.describe()  # estadísticas descriptivas (solo numéricas)</code></pre>
+
+    <p><code>describe()</code> calcula para cada columna numérica: cantidad, media, desviación estándar, mínimo, cuartiles y máximo. Es el resumen estadístico básico.</p>
+
+    <h3 id="tipos-datos">Tipos de datos</h3>
+    <p>Las columnas pueden ser <strong>numéricas</strong> (continuas o discretas) o <strong>categóricas</strong>. Identificarlas correctamente es clave para elegir la visualización adecuada:</p>
+    <pre><code class="language-python">df.dtypes   # tipo de cada columna
+
+# Variables numéricas del dataset
+numericas = df.select_dtypes(include="number").columns.tolist()
+
+# Variables categóricas
+categoricas = ["gender", "course", "internet_access",
+               "sleep_quality", "study_method",
+               "facility_rating", "exam_difficulty"]
+
+# Valores únicos de una variable categórica
+df["study_method"].unique()
+df["gender"].value_counts()</code></pre>
+
+    <h2 id="filtros">Filtros booleanos</h2>
+    <p>Para analizar subconjuntos de los datos, se crean <strong>máscaras booleanas</strong>: condiciones que devuelven <code>True</code> o <code>False</code> para cada fila.</p>
+    <pre><code class="language-python"># Filtrar un solo género
+filtro_mujeres = df["gender"] == "female"
+df_mujeres = df[filtro_mujeres]
+
+# Filtrar múltiples condiciones (&, |)
+filtro = (df["gender"] == "female") & (df["study_hours"] > 5)
+df_filtrado = df[filtro]
+
+# Comparar distribuciones entre grupos
+scores_mujeres = df[df["gender"] == "female"]["exam_score"]
+scores_hombres = df[df["gender"] == "male"]["exam_score"]
+
+print(scores_mujeres.mean(), scores_hombres.mean())</code></pre>
+
+    <div class="def">
+      <div class="def-label">Importante</div>
+      <p>Los operadores <code>and</code>, <code>or</code> de Python <strong>no funcionan</strong> con filtros de Pandas. Hay que usar <code>&</code>, <code>|</code> y envolver cada condición en paréntesis.</p>
+    </div>
+
+    <h2 id="combinacion">Combinación de variables</h2>
+    <p>Crear nuevas columnas combinando variables existentes puede revelar patrones que no son visibles por separado:</p>
+    <pre><code class="language-python"># Combinar dos variables categóricas en una sola
+df["metodo_calidad"] = df["study_method"] + " - " + df["sleep_quality"]
+
+# Ejemplo de valores resultantes:
+# "coaching - poor", "online videos - good", "self-study - average"
+
+# Visualizar la nueva combinación
+sns.scatterplot(data=df, x="study_hours", y="exam_score",
+                hue="metodo_calidad", alpha=0.5)
+plt.show()</code></pre>
+
+    <h2 id="agrupaciones">Agrupaciones con groupby</h2>
+    <p><code>groupby()</code> divide el DataFrame en grupos según el valor de una o varias columnas y permite calcular estadísticas por grupo:</p>
+    <pre><code class="language-python"># Promedio de calificación por método de estudio y calidad de sueño
+resumen = (df.groupby("metodo_calidad")["exam_score"]
+             .agg(["mean", "std", "median"])
+             .sort_values("mean", ascending=False))
+
+print(resumen.head(5))</code></pre>
+
+    <p>Resultado esperado:</p>
+    <pre><code class="language-python">#                              mean        std  median
+# coaching - good            73.84      17.44   74.60
+# coaching - average         69.04      17.54   69.05
+# mixed - good               68.29      17.55   68.90
+# group study - good         65.86      17.90   66.20
+# online videos - good       64.89      18.37   65.20</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Comparar promedio por método de estudio con barplot</summary>
+      <div class="dbody">
+        <pre><code class="language-python">for col in categoricas:
+    sns.barplot(data=df, y="exam_score", hue=col, errorbar="sd")
+    plt.title(f"Promedio de calificación por {col}")
+    plt.xticks(rotation=30)
+    plt.show()</code></pre>
+      </div>
+    </details>
+
+    <h2 id="correlacion">Correlación de Pearson</h2>
+    <p>La <strong>correlación de Pearson</strong> mide la fuerza y dirección de la relación lineal entre dos variables numéricas. Su valor oscila entre −1 y 1:</p>
+    <div class="formula">\[ r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum (y_i - \bar{y})^2}} \]</div>
+
+    <ul>
+      <li><strong>r = 1</strong>: correlación lineal positiva perfecta</li>
+      <li><strong>r = −1</strong>: correlación lineal negativa perfecta</li>
+      <li><strong>r ≈ 0</strong>: sin relación lineal (puede haber relación no lineal)</li>
+    </ul>
+
+    <pre><code class="language-python"># Seleccionar solo columnas numéricas
+df_num = df[["study_hours", "class_attendance",
+             "sleep_hours", "exam_score"]]
+
+# Calcular la matriz de correlación
+matriz = df_num.corr()  # correlación de Pearson por defecto
+
+# Visualizar con heatmap
+sns.heatmap(matriz, annot=True, fmt=".2f",
+            cmap="coolwarm", vmin=-1, vmax=1)
+plt.title("Matriz de correlación de Pearson")
+plt.show()</code></pre>
+
+    <div class="def">
+      <div class="def-label">Limitación importante</div>
+      <p>La correlación de Pearson solo detecta <strong>relaciones lineales</strong>. Dos variables pueden tener una relación fuerte no lineal y aun así mostrar r ≈ 0. Por eso siempre hay que complementar con scatter plots.</p>
+    </div>
+
+    <h2 id="flujo">Flujo EDA completo</h2>
+    <p>Un EDA bien estructurado sigue este orden:</p>
+    <ol>
+      <li><strong>Carga y revisión general</strong> — <code>shape</code>, <code>info()</code>, <code>head()</code></li>
+      <li><strong>Estadísticas descriptivas</strong> — <code>describe()</code> para numéricas, <code>value_counts()</code> para categóricas</li>
+      <li><strong>Valores faltantes</strong> — <code>df.isnull().sum()</code></li>
+      <li><strong>Distribuciones individuales</strong> — histogramas y boxplots por variable</li>
+      <li><strong>Relaciones bivariadas</strong> — scatter plots, correlación, barplots</li>
+      <li><strong>Análisis multivariado</strong> — combinación de variables, <code>groupby</code>, heatmap</li>
+      <li><strong>Hipótesis y conclusiones</strong> — ¿qué variables parecen predecir la variable objetivo?</li>
+    </ol>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Correlación de Kendall y Spearman</summary>
+      <div class="dbody">
+        <p>Pandas permite calcular otros tipos de correlación con el parámetro <code>method</code>:</p>
+        <pre><code class="language-python">df_num.corr(method="pearson")   # sensible a outliers, asume normalidad
+df_num.corr(method="spearman")  # basada en rangos, robusta a outliers
+df_num.corr(method="kendall")   # basada en concordancias de pares</code></pre>
+        <p>Usa <strong>Spearman o Kendall</strong> cuando los datos tienen muchos valores atípicos o no siguen una distribución normal.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

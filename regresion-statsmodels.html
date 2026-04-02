@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regresión con Statsmodels — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.875rem}
+  th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3)}
+  td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  td:first-child{font-family:'JetBrains Mono',monospace;font-size:.82em;color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Regresión con Statsmodels</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#ols">OLS con statsmodels</a></li>
+      <li><a href="#summary">Interpretación del summary</a></li>
+      <li class="sub"><a href="#r2">R² y ajuste global</a></li>
+      <li class="sub"><a href="#coeficientes">Coeficientes</a></li>
+      <li class="sub"><a href="#pvalor">P-valor y significancia</a></li>
+      <li><a href="#residuos">Análisis de residuos</a></li>
+      <li class="sub"><a href="#supuestos">Supuestos del modelo</a></li>
+      <li class="sub"><a href="#diagnostico">Gráficas de diagnóstico</a></li>
+      <li><a href="#prediccion">Predicción</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">06 — statsmodels</div>
+      <h1>Regresión con Statsmodels</h1>
+      <p class="lead">Statsmodels es una biblioteca de Python orientada a la inferencia estadística. Su implementación de OLS (Ordinary Least Squares) no solo ajusta el modelo, sino que proporciona un reporte estadístico completo con coeficientes, errores estándar, p-valores y métricas de ajuste.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>A diferencia de la implementación manual que hicimos antes, statsmodels trata la regresión como un <strong>problema estadístico</strong>: no solo nos interesa la predicción, sino también si los coeficientes son estadísticamente significativos y si los supuestos del modelo se cumplen.</p>
+
+    <pre><code class="language-python">import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(100, random_state=1)</code></pre>
+
+    <h2 id="ols">OLS con statsmodels</h2>
+    <p>El flujo básico es: definir las variables, crear el modelo y ajustarlo:</p>
+    <pre><code class="language-python"># Variable independiente (matriz X)
+X = np.array(df[["study_hours"]])
+# Para agregar intercepto explícito:
+# X = sm.add_constant(X)
+
+# Variable dependiente
+y = np.array(df["exam_score"])
+
+# Crear y ajustar el modelo
+model  = sm.OLS(y, X)
+result = model.fit()
+
+# Ver el reporte completo
+print(result.summary())</code></pre>
+
+    <p>El output de <code>result.summary()</code> contiene toda la información del modelo. A continuación se explica cada sección.</p>
+
+    <h2 id="summary">Interpretación del summary</h2>
+    <p>El summary se divide en tres bloques. Este es un ejemplo real con el dataset de exámenes:</p>
+    <pre><code class="language-text">                    OLS Regression Results
+===========================================================
+Dep. Variable:              y   R-squared:          0.886
+Model:                    OLS   Adj. R-squared:     0.885
+Method:          Least Squares   F-statistic:        768.8
+Date:          Sat, 28 Feb 2026   Prob (F-statistic): 1.82e-48
+===========================================================
+                coef   std err       t    P>|t|
+-----------------------------------------------------------
+x1           13.5268     0.488   27.728    0.000
+===========================================================
+Omnibus:             1.114   Durbin-Watson:       1.549
+Prob(Omnibus):       0.573   Jarque-Bera (JB):    1.094
+===========================================================</code></pre>
+
+    <h3 id="r2">R² y ajuste global</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>R-squared</td><td>Fracción de la varianza en y explicada por el modelo. 0.886 = 88.6%</td></tr>
+        <tr><td>Adj. R-squared</td><td>R² penalizado por el número de variables. Más justo para comparar modelos</td></tr>
+        <tr><td>F-statistic</td><td>Prueba de que al menos un coeficiente es diferente de cero</td></tr>
+        <tr><td>Prob (F-statistic)</td><td>P-valor de la prueba F. Muy pequeño = el modelo como un todo es significativo</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="coeficientes">Coeficientes</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>coef</td><td>Valor estimado del parámetro. Aquí m = 13.53: cada hora de estudio suma ~13.5 puntos</td></tr>
+        <tr><td>std err</td><td>Error estándar del coeficiente — qué tan precisa es la estimación</td></tr>
+        <tr><td>t</td><td>Estadístico t = coef / std_err. Mide cuántas desviaciones estándar está el coeficiente de cero</td></tr>
+        <tr><td>[0.025  0.975]</td><td>Intervalo de confianza del 95% para el coeficiente</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="pvalor">P-valor y significancia estadística</h3>
+    <p>El p-valor (<code>P&gt;|t|</code>) responde: <em>si el coeficiente fuera realmente cero, ¿qué tan probable sería observar este valor o uno más extremo por azar?</em></p>
+    <div class="def">
+      <div class="def-label">Regla práctica</div>
+      <p>Si <code>P&gt;|t| &lt; 0.05</code>, el coeficiente es <strong>estadísticamente significativo</strong> al nivel del 5% — es decir, rechazamos la hipótesis de que ese coeficiente es cero. Un valor de <code>0.000</code> indica significancia muy alta.</p>
+    </div>
+
+    <h2 id="residuos">Análisis de residuos</h2>
+    <p>El <strong>residuo</strong> de cada observación es la diferencia entre el valor real y el predicho por el modelo:</p>
+    <div class="formula">\[ e_i = y_i - \hat{y}_i \]</div>
+    <p>Los residuos son clave para diagnosticar si el modelo es adecuado.</p>
+
+    <h3 id="supuestos">Supuestos del modelo lineal</h3>
+    <p>La regresión lineal tiene supuestos que deben cumplirse para que la inferencia sea válida:</p>
+    <ol>
+      <li><strong>Linealidad:</strong> la relación entre x e y es lineal</li>
+      <li><strong>Independencia:</strong> los residuos son independientes entre sí</li>
+      <li><strong>Homocedasticidad:</strong> la varianza de los residuos es constante para todos los valores de x</li>
+      <li><strong>Normalidad:</strong> los residuos siguen una distribución aproximadamente normal</li>
+    </ol>
+
+    <h3 id="diagnostico">Gráficas de diagnóstico</h3>
+    <pre><code class="language-python">X = np.array(df[["study_hours"]])
+y = np.array(df["exam_score"])
+result = sm.OLS(y, X).fit()
+
+# Calcular residuos
+y_hat    = result.predict(X)
+residuos = y - y_hat
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+# 1. Residuos vs valores predichos
+axes[0].scatter(y_hat, residuos, alpha=0.6, s=20)
+axes[0].axhline(0, color="#6c7fea", linewidth=1.2)
+axes[0].set_xlabel("Valores predichos")
+axes[0].set_ylabel("Residuos")
+axes[0].set_title("Residuos vs Predichos")
+axes[0].grid(True, alpha=0.2)
+
+# 2. Distribución de residuos
+axes[1].hist(residuos, bins=20, edgecolor="none", alpha=0.8)
+axes[1].set_xlabel("Residuo")
+axes[1].set_ylabel("Frecuencia")
+axes[1].set_title("Distribución de residuos")
+
+plt.tight_layout()
+plt.show()</code></pre>
+
+    <div class="def">
+      <div class="def-label">¿Qué buscar en el gráfico de residuos vs predichos?</div>
+      <p>Los residuos deben distribuirse <strong>aleatoriamente alrededor del cero</strong>, sin ningún patrón visible. Si hay una curva o un patrón en abanico, el modelo lineal no es adecuado para esos datos.</p>
+    </div>
+
+    <h2 id="prediccion">Predicción</h2>
+    <pre><code class="language-python"># Predecir para un nuevo valor
+nuevo_x = np.array([[5.0]])   # estudiante que estudia 5 horas
+prediccion = result.predict(nuevo_x)
+print(f"Calificación estimada: {prediccion[0]:.1f}")
+
+# Visualizar el modelo ajustado
+x_line = np.linspace(df["study_hours"].min(), df["study_hours"].max(), 100).reshape(-1, 1)
+y_pred  = result.predict(x_line)
+
+fig, ax = plt.subplots(figsize=(7, 5))
+ax.scatter(X, y, alpha=0.5, s=20, label="Datos reales")
+ax.plot(x_line, y_pred, color="#6c7fea", linewidth=2, label="Modelo OLS")
+ax.set_xlabel("Horas de estudio")
+ax.set_ylabel("Calificación")
+ax.legend()
+plt.show()</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Agregar el intercepto explícito</summary>
+      <div class="dbody">
+        <p>Por defecto statsmodels <strong>no incluye el intercepto</strong> a menos que lo agreguemos manualmente con <code>sm.add_constant()</code>:</p>
+        <pre><code class="language-python">X = np.array(df[["study_hours"]])
+X = sm.add_constant(X)  # agrega columna de unos para el término b
+
+result = sm.OLS(y, X).fit()
+print(result.summary())
+# Ahora el summary muestra dos coeficientes: const (b) y x1 (m)</code></pre>
+        <p>Con el intercepto, los coeficientes tienen una interpretación más natural: <em>b</em> es la calificación esperada cuando el estudiante no estudia nada.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pruebas de Hipótesis — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.875rem}
+  th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3)}
+  td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Pruebas de Hipótesis</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#hipotesis">H0 y Ha</a></li>
+      <li><a href="#pvalor">El p-valor</a></li>
+      <li><a href="#t-student">Prueba t de Student</a></li>
+      <li class="sub"><a href="#t-independiente">Dos muestras independientes</a></li>
+      <li><a href="#anova">Prueba ANOVA</a></li>
+      <li class="sub"><a href="#anova-python">ANOVA en Python</a></li>
+      <li><a href="#chi2">Prueba Chi-cuadrada</a></li>
+      <li class="sub"><a href="#chi2-python">Chi-cuadrada en Python</a></li>
+      <li><a href="#eleccion">¿Cuál prueba usar?</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">08 — hipótesis</div>
+      <h1>Pruebas de Hipótesis</h1>
+      <p class="lead">Las pruebas de hipótesis son herramientas estadísticas que permiten tomar decisiones basadas en datos. En lugar de confiar en percepciones visuales, nos dan un criterio cuantitativo para determinar si una diferencia observada es real o producto del azar.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>Imaginemos que queremos saber si el método de estudio afecta las calificaciones. Podríamos mirar los promedios de cada grupo, pero ¿cómo sabemos si esa diferencia es real o simplemente variación aleatoria de la muestra? Las pruebas de hipótesis responden esa pregunta.</p>
+
+    <h2 id="hipotesis">Hipótesis nula y alternativa</h2>
+    <p>Toda prueba estadística parte de dos hipótesis:</p>
+    <ul>
+      <li><strong>H₀ (hipótesis nula):</strong> no hay efecto, no hay diferencia, no hay asociación. Es el estado de "nada interesante está pasando".</li>
+      <li><strong>Hₐ (hipótesis alternativa):</strong> sí hay efecto, diferencia o asociación. Es lo que queremos demostrar.</li>
+    </ul>
+    <p>El objetivo de la prueba es decidir si hay suficiente evidencia en los datos para <strong>rechazar H₀</strong>.</p>
+
+    <div class="def">
+      <div class="def-label">Lógica de la prueba</div>
+      <p>Asumimos que H₀ es verdadera y calculamos la probabilidad de observar lo que vimos (o algo más extremo) si eso fuera cierto. Si esa probabilidad es muy pequeña, concluimos que H₀ probablemente no es verdadera y la rechazamos.</p>
+    </div>
+
+    <h2 id="pvalor">El p-valor</h2>
+    <p>El <strong>p-valor</strong> es la probabilidad de obtener el resultado observado (o uno más extremo) asumiendo que H₀ es verdadera:</p>
+    <ul>
+      <li><strong>p-valor &lt; 0.05:</strong> rechazamos H₀ al nivel de significancia del 5%</li>
+      <li><strong>p-valor ≥ 0.05:</strong> no tenemos suficiente evidencia para rechazar H₀</li>
+    </ul>
+    <p>El umbral 0.05 es una convención. En ciencias más exigentes se usa 0.01 o incluso 0.001.</p>
+
+    <div class="def">
+      <div class="def-label">Importante</div>
+      <p>No rechazar H₀ <strong>no significa que H₀ sea verdadera</strong>. Solo significa que los datos no proporcionan suficiente evidencia para descartarla. La ausencia de evidencia no es evidencia de ausencia.</p>
+    </div>
+
+    <h2 id="t-student">Prueba t de Student</h2>
+    <p>La prueba t compara las medias de dos grupos para determinar si la diferencia entre ellas es estadísticamente significativa. Se usa cuando:</p>
+    <ul>
+      <li>La variable de interés es <strong>numérica</strong> (continua)</li>
+      <li>Se comparan <strong>dos grupos</strong></li>
+    </ul>
+
+    <h3 id="t-independiente">Dos muestras independientes</h3>
+    <p>Ejemplo: ¿tienen las mujeres y los hombres calificaciones significativamente diferentes?</p>
+    <pre><code class="language-python">import pandas as pd
+from scipy.stats import ttest_ind
+
+df = pd.read_csv("data/csvs/examenes.csv")
+
+scores_mujeres = df[df["gender"] == "female"]["exam_score"]
+scores_hombres = df[df["gender"] == "male"]["exam_score"]
+
+# H₀: los promedios son iguales
+# Hₐ: los promedios son diferentes
+
+t_stat, p_valor = ttest_ind(scores_mujeres, scores_hombres)
+
+print(f"Estadístico t: {t_stat:.4f}")
+print(f"P-valor:       {p_valor:.4f}")
+
+if p_valor < 0.05:
+    print("Rechazamos H₀: hay diferencia significativa en calificaciones por género.")
+else:
+    print("No rechazamos H₀: no hay diferencia significativa.")</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> El estadístico t</summary>
+      <div class="dbody">
+        <p>El estadístico t mide cuántas desviaciones estándar de diferencia hay entre las medias, relativo a la variabilidad esperada:</p>
+        <div class="formula">\[ t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \]</div>
+        <p>Un valor absoluto grande de t (y por tanto un p-valor pequeño) indica que la diferencia entre las medias es grande en relación con la variabilidad de los datos.</p>
+      </div>
+    </details>
+
+    <h2 id="anova">Prueba ANOVA</h2>
+    <p>Cuando queremos comparar las medias de <strong>tres o más grupos</strong>, usar múltiples pruebas t aumenta el riesgo de error. ANOVA (Analysis of Variance) resuelve esto comparando todos los grupos simultáneamente.</p>
+    <p>ANOVA es la prueba adecuada cuando:</p>
+    <ul>
+      <li>La variable de interés es <strong>numérica</strong></li>
+      <li>El factor de agrupación es <strong>categórico con 3 o más categorías</strong></li>
+    </ul>
+
+    <p>Las hipótesis son:</p>
+    <ul>
+      <li><strong>H₀:</strong> todas las medias de los grupos son iguales — \(\mu_1 = \mu_2 = \cdots = \mu_k\)</li>
+      <li><strong>Hₐ:</strong> al menos una media es diferente</li>
+    </ul>
+
+    <h3 id="anova-python">ANOVA en Python</h3>
+    <p>Ejemplo: ¿el método de estudio impacta en la calificación del examen?</p>
+    <pre><code class="language-python">from scipy.stats import f_oneway
+
+# Crear una lista con los scores de cada grupo
+grupos = []
+for metodo in df["study_method"].unique():
+    filtro = df["study_method"] == metodo
+    grupos.append(list(df[filtro]["exam_score"]))
+
+# Aplicar ANOVA
+f_stat, p_valor = f_oneway(*grupos)
+
+print(f"Estadístico F: {f_stat:.4f}")
+print(f"P-valor:       {p_valor:.6f}")
+
+if p_valor < 0.05:
+    print("Rechazamos H₀: el método de estudio sí impacta en el exam_score.")
+else:
+    print("No rechazamos H₀: el método de estudio NO impacta.")</code></pre>
+
+    <pre><code class="language-text">Estadístico F: 31.45
+P-valor:       0.000000
+Rechazamos H₀: el método de estudio sí impacta en el exam_score.</code></pre>
+
+    <h2 id="chi2">Prueba Chi-cuadrada</h2>
+    <p>La prueba chi-cuadrada (\(\chi^2\)) evalúa si existe <strong>asociación entre dos variables categóricas</strong>. Compara la distribución observada de frecuencias con la distribución esperada si las variables fueran independientes.</p>
+
+    <p>Las hipótesis son:</p>
+    <ul>
+      <li><strong>H₀:</strong> las dos variables son independientes (no hay asociación)</li>
+      <li><strong>Hₐ:</strong> las dos variables están asociadas</li>
+    </ul>
+
+    <h3 id="chi2-python">Chi-cuadrada en Python</h3>
+    <p>Ejemplo: ¿existe asociación entre el género y el método de estudio?</p>
+    <pre><code class="language-python">from scipy.stats import chi2_contingency
+
+# Paso 1: tabla de contingencias (frecuencias cruzadas)
+tabla = pd.crosstab(df["gender"], df["study_method"])
+print(tabla)
+
+# Paso 2: prueba chi-cuadrada
+chi2_stat, p_valor, grados_libertad, esperados = chi2_contingency(tabla)
+
+print(f"\nEstadístico chi²: {chi2_stat:.4f}")
+print(f"P-valor:          {p_valor:.4f}")
+print(f"Grados de libertad: {grados_libertad}")
+
+if p_valor < 0.05:
+    print("Rechazamos H₀: existe asociación entre género y método de estudio.")
+else:
+    print("No rechazamos H₀: género y método de estudio son independientes.")</code></pre>
+
+    <pre><code class="language-text">study_method  coaching  group study  mixed  online videos  self-study
+gender
+female            1350         1273   1284           1323        1349
+male              1315         1282   1324           1386        1388
+other             1371         1367   1286           1360        1342
+
+Estadístico chi²: 11.72
+P-valor:          0.1641
+No rechazamos H₀: género y método de estudio son independientes.</code></pre>
+
+    <h2 id="eleccion">¿Cuál prueba usar?</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Variable objetivo</th>
+          <th>Variable de agrupación</th>
+          <th>Prueba</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Numérica</td>
+          <td>Categórica — 2 grupos</td>
+          <td>t de Student</td>
+        </tr>
+        <tr>
+          <td>Numérica</td>
+          <td>Categórica — 3+ grupos</td>
+          <td>ANOVA (f_oneway)</td>
+        </tr>
+        <tr>
+          <td>Categórica</td>
+          <td>Categórica</td>
+          <td>Chi-cuadrada</td>
+        </tr>
+        <tr>
+          <td>Numérica</td>
+          <td>Numérica</td>
+          <td>Correlación de Pearson / regresión</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

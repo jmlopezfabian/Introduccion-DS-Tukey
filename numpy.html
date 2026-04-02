@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NumPy — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* NAV */
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  /* LAYOUT */
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+
+  /* SIDEBAR */
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}
+  .toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+
+  /* CONTENT */
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+
+  /* CODE */
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  /* CALLOUTS */
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+
+  /* DETAILS */
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">NumPy</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#arrays">Arrays</a></li>
+      <li class="sub"><a href="#crear">Crear arrays</a></li>
+      <li class="sub"><a href="#operaciones">Operaciones</a></li>
+      <li><a href="#producto-punto">Producto punto</a></li>
+      <li><a href="#algebra">Álgebra lineal</a></li>
+      <li><a href="#ecm">ECM con NumPy</a></li>
+      <li><a href="#pendiente">Pendiente óptima</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">01 — numpy</div>
+      <h1>NumPy</h1>
+      <p class="lead">NumPy es la biblioteca fundamental para cómputo numérico en Python. Provee el objeto <code>ndarray</code>, operaciones vectorizadas eficientes y funciones de álgebra lineal que son la base de casi todo el ecosistema científico de Python.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>Cuando trabajamos con listas de Python y queremos operar sobre cada elemento, normalmente usamos un ciclo <code>for</code>. NumPy elimina esa necesidad: sus <strong>operaciones vectorizadas</strong> aplican cálculos sobre todos los elementos del arreglo de manera simultánea, aprovechando código C optimizado por debajo y reduciendo significativamente el tiempo de ejecución.</p>
+
+    <div class="def">
+      <div class="def-label">Concepto clave</div>
+      <p>Un <strong>ndarray</strong> es una estructura de datos n-dimensional que almacena elementos del mismo tipo en memoria contigua. Esto lo hace mucho más rápido que una lista de Python para operaciones numéricas.</p>
+    </div>
+
+    <h2 id="arrays">Arrays</h2>
+
+    <h3 id="crear">Crear arrays</h3>
+    <p>La forma más directa es pasar una lista a <code>np.array()</code>:</p>
+    <pre><code class="language-python">import numpy as np
+
+arr = np.array([1, 2, 3, 4, 5])
+print(arr.shape)  # (5,)
+print(arr.dtype)  # int64</code></pre>
+
+    <p>Funciones auxiliares para crear arrays de forma automática:</p>
+    <pre><code class="language-python">np.arange(0, 10, 2)      # [0 2 4 6 8]
+np.linspace(0, 1, 5)     # [0. 0.25 0.5 0.75 1.]
+np.zeros((3, 3))         # matriz de ceros 3x3
+np.ones((2, 4))          # matriz de unos 2x4
+np.eye(3)                # matriz identidad 3x3</code></pre>
+
+    <h3 id="operaciones">Operaciones elementales</h3>
+    <p>Las operaciones aritméticas entre arrays se aplican <strong>elemento a elemento</strong> sin necesidad de ciclos:</p>
+    <pre><code class="language-python">a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+a + b    # [5 7 9]
+a * b    # [ 4 10 18]
+a ** 2   # [1 4 9]
+a / b    # [0.25 0.4  0.5 ]</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Broadcasting: operar un array con un escalar</summary>
+      <div class="dbody">
+        <p>Cuando operas un array con un número, el número se "expande" automáticamente al tamaño del array:</p>
+        <pre><code class="language-python">x = np.array([10, 20, 30, 40])
+x * 2                         # [20 40 60 80]
+x - 5                         # [ 5 15 25 35]
+
+# Estandarización Z-score
+(x - x.mean()) / x.std()      # [-1.34 -0.45  0.45  1.34]</code></pre>
+      </div>
+    </details>
+
+    <h2 id="producto-punto">Producto punto</h2>
+    <p>El <strong>producto punto</strong> entre dos vectores es la suma de los productos de sus componentes correspondientes:</p>
+    <div class="formula">\[ \mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^{n} a_i \cdot b_i \]</div>
+
+    <pre><code class="language-python">a = np.array([1, 2, 3])
+b = np.array([2, 3, 4])
+
+np.dot(a, b)     # 1*2 + 2*3 + 3*4 = 20
+(a * b).sum()    # equivalente
+a @ b            # operador @ (producto matricial)</code></pre>
+
+    <div class="def">
+      <div class="def-label">Relevancia en machine learning</div>
+      <p>El producto punto es la operación central de la regresión lineal: la predicción \(\hat{y} = \mathbf{x} \cdot \mathbf{w}\) es un producto punto entre las características del dato y los pesos del modelo.</p>
+    </div>
+
+    <h2 id="algebra">Álgebra lineal con <code>np.linalg</code></h2>
+    <p>NumPy incluye el submódulo <code>np.linalg</code> para resolver sistemas de ecuaciones, calcular determinantes, inversas y descomposiciones matriciales.</p>
+    <p>Para resolver el sistema \(A\mathbf{x} = \mathbf{b}\):</p>
+    <pre><code class="language-python">A = np.array([[ 2,  1, -1],
+              [-3, -1,  2],
+              [-2,  1,  2]])
+b = np.array([8, -11, -3])
+
+x = np.linalg.solve(A, b)
+print(x)  # [ 2.  3. -1.]</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Transpuesta, inversa y norma</summary>
+      <div class="dbody">
+        <p>La <strong>transpuesta</strong> intercambia filas y columnas. La <strong>inversa</strong> \(A^{-1}\) cumple \(A \cdot A^{-1} = I\). En regresión lineal la solución analítica exacta es:</p>
+        <div class="formula">\[ \mathbf{w} = (X^T X)^{-1} X^T \mathbf{y} \]</div>
+        <pre><code class="language-python">A.T                   # transpuesta
+np.linalg.inv(A)      # inversa
+np.linalg.det(A)      # determinante
+np.linalg.norm(v)     # norma euclidiana del vector v</code></pre>
+      </div>
+    </details>
+
+    <h2 id="ecm">Error Cuadrático Medio con NumPy</h2>
+    <p>El <strong>Error Cuadrático Medio (ECM)</strong> mide qué tan lejos están las predicciones de los valores reales. Es la función de pérdida más utilizada en regresión:</p>
+    <div class="formula">\[ ECM = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 \]</div>
+
+    <p>Con NumPy se implementa en una sola línea aprovechando las operaciones vectorizadas:</p>
+    <pre><code class="language-python">def ecm(y_real: np.ndarray, y_estimado: np.ndarray) -> float:
+    """Calcula el Error Cuadrático Medio entre dos vectores."""
+    return ((y_real - y_estimado) ** 2).mean()
+
+y     = np.array([1, 2, 3, 4, 5])
+y_hat = np.array([1.1, 2.2, 2.9, 4.1, 5.0])
+print(ecm(y, y_hat))  # 0.026</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Desglose del cálculo paso a paso</summary>
+      <div class="dbody">
+        <pre><code class="language-python">y      = np.array([1, 2, 3])
+y_hat  = np.array([2, 4, 6])
+
+diferencia = y - y_hat         # [-1 -2 -3]
+cuadrados  = diferencia ** 2   # [1  4  9]
+ecm_val    = cuadrados.mean()  # (1+4+9)/3 = 4.67</code></pre>
+      </div>
+    </details>
+
+    <h2 id="pendiente">Pendiente óptima con NumPy</h2>
+    <p>Para una regresión lineal simple \(\hat{y} = mx + b\) con ordenada al origen conocida, la pendiente que minimiza el ECM se obtiene con la fórmula cerrada:</p>
+    <div class="formula">\[ m = \frac{\sum x_i y_i - b \sum x_i}{\sum x_i^2} \]</div>
+
+    <pre><code class="language-python">def pendiente_optima(b: float, x: np.ndarray, y: np.ndarray) -> float:
+    return ((x * y).sum() - b * x.sum()) / (x ** 2).sum()
+
+x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+y = np.array([2.1, 4.0, 5.9, 8.1, 10.0])
+
+m = pendiente_optima(0.0, x, y)
+print(f"Pendiente: {m:.4f}")  # aprox. 2.0</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejercicio</span> Implementa la función de valores estimados</summary>
+      <div class="dbody">
+        <p>Dado un vector <code>x</code>, una pendiente <code>m</code> y una ordenada al origen <code>b</code>, calcula los valores estimados \(\hat{y} = mx + b\):</p>
+        <pre><code class="language-python">def calcular_y(x: np.ndarray, m: float, b: float) -> np.ndarray:
+    # Tu código aquí
+    pass
+
+# Resultado esperado: [ 2.  4.  6.  8. 10.]
+print(calcular_y(np.array([1, 2, 3, 4, 5]), 2.0, 0.0))</code></pre>
+        <p><strong>Solución:</strong></p>
+        <pre><code class="language-python">def calcular_y(x: np.ndarray, m: float, b: float) -> np.ndarray:
+    return x * m + b</code></pre>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

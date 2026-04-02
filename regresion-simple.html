@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regresión Lineal Simple — Ciencia de Datos 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  aside{position:sticky;top:72px;height:fit-content;max-height:calc(100vh - 90px);overflow-y:auto}
+  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+  .toc ul{list-style:none}.toc li{margin-bottom:1px}
+  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
+  .toc a:hover{color:var(--text);text-decoration:none}
+  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
+  .toc .sub{padding-left:14px}
+  .content{min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Regresión Lineal Simple</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside>
+    <div class="toc-label">Contenido</div>
+    <nav class="toc"><ul>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#recta">La recta y = mx + b</a></li>
+      <li><a href="#ecm">Función de pérdida ECM</a></li>
+      <li><a href="#busqueda">Búsqueda por fuerza bruta</a></li>
+      <li><a href="#formula-cerrada">Fórmula cerrada</a></li>
+      <li class="sub"><a href="#pendiente">Pendiente óptima</a></li>
+      <li class="sub"><a href="#ordenada">Ordenada al origen</a></li>
+      <li><a href="#implementacion">Implementación completa</a></li>
+      <li><a href="#metricas">Métricas de evaluación</a></li>
+    </ul></nav>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">04 — regresión simple</div>
+      <h1>Regresión Lineal Simple</h1>
+      <p class="lead">La regresión lineal simple modela la relación entre una variable independiente <em>x</em> y una variable dependiente <em>y</em> ajustando una línea recta que minimiza los errores de predicción.</p>
+    </div>
+
+    <h2 id="intro">Introducción</h2>
+    <p>El objetivo de la regresión lineal es encontrar los parámetros de una línea recta que <strong>mejor explique</strong> la relación entre dos variables. Una vez encontrada esa recta, podemos usarla para predecir el valor de <em>y</em> dado un nuevo valor de <em>x</em>.</p>
+    <p>Por ejemplo: ¿cuánto subirá la calificación de un estudiante si estudia una hora más? La regresión lineal nos da esa respuesta en términos numéricos.</p>
+
+    <h2 id="recta">La recta y = mx + b</h2>
+    <p>Una línea recta en un plano 2D queda completamente definida por dos parámetros:</p>
+
+    <div class="formula">\[ \hat{y} = mx + b \]</div>
+
+    <ul>
+      <li><strong>m</strong> — pendiente: cuánto cambia \(\hat{y}\) cuando \(x\) aumenta en 1 unidad</li>
+      <li><strong>b</strong> — ordenada al origen (intercepto): el valor de \(\hat{y}\) cuando \(x = 0\)</li>
+    </ul>
+
+    <pre><code class="language-python">def valores_estimados(m, b, x):
+    """Calcula y_hat = mx + b para cada valor en x."""
+    return [m * xi + b for xi in x]
+
+# Con NumPy, mucho más conciso:
+def calcular_y(m, b, x):
+    return m * x + b</code></pre>
+
+    <h2 id="ecm">Función de pérdida: ECM</h2>
+    <p>Para medir qué tan buena es nuestra recta, necesitamos cuantificar el <strong>error total</strong> entre los valores reales \(y_i\) y los estimados \(\hat{y}_i\). El <strong>Error Cuadrático Medio</strong> es la métrica estándar:</p>
+
+    <div class="formula">\[ ECM(m, b) = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \frac{1}{n} \sum_{i=1}^{n} (y_i - mx_i - b)^2 \]</div>
+
+    <p>Se eleva al cuadrado por dos razones: para que los errores positivos y negativos no se cancelen, y para penalizar más los errores grandes.</p>
+
+    <pre><code class="language-python">def error_cuadratico_medio(y_real, y_estimado):
+    total = 0
+    for i in range(len(y_real)):
+        total += (y_real[i] - y_estimado[i]) ** 2
+    return total / len(y_real)
+
+# Con NumPy:
+import numpy as np
+def ecm(y_real, y_estimado):
+    return ((np.array(y_real) - np.array(y_estimado)) ** 2).mean()</code></pre>
+
+    <h2 id="busqueda">Búsqueda por fuerza bruta</h2>
+    <p>Una primera estrategia es probar muchos valores posibles de <em>m</em> y <em>b</em>, calcular el ECM para cada combinación y quedarnos con los que minimizan el error. Es ineficiente pero ilustra perfectamente la idea de optimización:</p>
+
+    <pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(100)
+x = list(df["study_hours"])
+y = list(df["exam_score"])
+
+# Búsqueda en una dimensión: solo variamos m, fijamos b=40
+errores = []
+pendientes = range(-10, 30)
+
+for m in pendientes:
+    y_hat = valores_estimados(m, 40, x)
+    ecm_actual = error_cuadratico_medio(y, y_hat)
+    errores.append(ecm_actual)
+
+pendiente_optima = pendientes[errores.index(min(errores))]
+print(f"Mejor pendiente encontrada: {pendiente_optima}")</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Búsqueda en dos dimensiones (m y b)</summary>
+      <div class="dbody">
+        <p>Al extender la búsqueda a ambos parámetros simultáneamente, el espacio de soluciones se convierte en una superficie. Buscamos el punto más bajo de esa superficie:</p>
+        <pre><code class="language-python">pendientes = range(-10, 10)
+ordenadas  = range(20, 50)
+
+ecm_minimo = float("inf")
+mejor_m = mejor_b = None
+
+for m in pendientes:
+    for b in ordenadas:
+        y_hat = valores_estimados(m, b, x)
+        ecm_actual = error_cuadratico_medio(y, y_hat)
+        if ecm_actual < ecm_minimo:
+            ecm_minimo = ecm_actual
+            mejor_m, mejor_b = m, b
+
+print(f"m={mejor_m}, b={mejor_b}, ECM={ecm_minimo:.2f}")</code></pre>
+        <p>El problema con fuerza bruta es que el número de combinaciones crece exponencialmente. Para espacios continuos o de alta dimensión, necesitamos métodos más inteligentes: la <strong>fórmula cerrada</strong> o el <a href="gradiente.html">gradiente descendente</a>.</p>
+      </div>
+    </details>
+
+    <h2 id="formula-cerrada">Fórmula cerrada (mínimos cuadrados)</h2>
+    <p>La fórmula cerrada resuelve el problema de minimización de forma analítica, derivando el ECM respecto a <em>m</em> y <em>b</em> e igualando a cero. El resultado son dos ecuaciones explícitas:</p>
+
+    <h3 id="pendiente">Pendiente óptima</h3>
+    <div class="formula">
+      \[ m = \frac{n\sum x_i y_i - \sum x_i \sum y_i}{n\sum x_i^2 - \left(\sum x_i\right)^2} \]
+    </div>
+
+    <h3 id="ordenada">Ordenada al origen óptima</h3>
+    <div class="formula">
+      \[ b = \bar{y} - m\bar{x} \]
+    </div>
+
+    <pre><code class="language-python">import numpy as np
+
+x = np.array(df["study_hours"])
+y = np.array(df["exam_score"])
+n = len(x)
+
+# Pendiente
+m = (n * (x * y).sum() - x.sum() * y.sum()) / \
+    (n * (x ** 2).sum() - x.sum() ** 2)
+
+# Ordenada al origen
+b = y.mean() - m * x.mean()
+
+print(f"m = {m:.4f}")
+print(f"b = {b:.4f}")
+
+# Predicciones
+y_hat = m * x + b</code></pre>
+
+    <h2 id="implementacion">Implementación completa con visualización</h2>
+    <pre><code class="language-python">import matplotlib.pyplot as plt
+
+# Ajustar modelo
+x = np.array(df["study_hours"])
+y = np.array(df["exam_score"])
+n = len(x)
+
+m = (n * (x * y).sum() - x.sum() * y.sum()) / (n * (x**2).sum() - x.sum()**2)
+b = y.mean() - m * x.mean()
+y_hat = m * x + b
+
+# Visualización
+x_line = np.linspace(x.min(), x.max(), 100)
+y_line = m * x_line + b
+
+fig, ax = plt.subplots(figsize=(7, 5))
+ax.scatter(x, y, alpha=0.5, s=20, label="Datos reales")
+ax.plot(x_line, y_line, color="#6c7fea", linewidth=2, label=f"y = {m:.2f}x + {b:.2f}")
+ax.set_xlabel("Horas de estudio")
+ax.set_ylabel("Calificación")
+ax.legend()
+plt.show()</code></pre>
+
+    <h2 id="metricas">Métricas de evaluación</h2>
+    <p>Además del ECM, se usan otras métricas para evaluar la calidad del modelo:</p>
+    <pre><code class="language-python"># Error Cuadrático Medio
+ecm_val = ((y - y_hat) ** 2).mean()
+
+# Raíz del Error Cuadrático Medio (mismas unidades que y)
+recm = ecm_val ** 0.5
+
+# Coeficiente de determinación R²
+ss_res = ((y - y_hat) ** 2).sum()
+ss_tot = ((y - y.mean()) ** 2).sum()
+r2 = 1 - ss_res / ss_tot
+
+print(f"ECM:  {ecm_val:.2f}")
+print(f"RECM: {recm:.2f}")
+print(f"R²:   {r2:.4f}")</code></pre>
+
+    <div class="def">
+      <div class="def-label">Interpretación de R²</div>
+      <p>El coeficiente \(R^2\) indica qué fracción de la variabilidad en \(y\) es explicada por el modelo. Un \(R^2 = 0.85\) significa que el modelo explica el 85% de la variación. Un \(R^2 = 0\) significa que el modelo no es mejor que simplemente predecir el promedio.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>
