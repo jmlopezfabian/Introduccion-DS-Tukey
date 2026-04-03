@@ -4,6 +4,20 @@ Notas, código y ejercicios del curso de Ciencia de Datos. Cada módulo correspo
 
 ## Módulos
 
+### Bases de Python
+
+| # | Módulo | Página |
+|---|--------|--------|
+| B1 | Línea de Comandos | [terminal.html](terminal.html) |
+| B2 | Variables y Tipos de Datos | [variables.html](variables.html) |
+| B3 | Entrada y Salida de Datos | [entrada-salida.html](entrada-salida.html) |
+| B4 | Operadores Aritméticos | [operadores.html](operadores.html) |
+| B5 | Git y GitHub | [git-basico.html](git-basico.html) |
+| B6 | Condicionales | [condicionales.html](condicionales.html) |
+| B7 | Listas y Bucle for | [listas-cadenas.html](listas-cadenas.html) |
+
+### Ciencia de Datos
+
 | # | Módulo | Página | Notebook |
 |---|--------|--------|----------|
 | 01 | NumPy | [numpy.html](numpy.html) | [numpy.ipynb](notebooks/numpy.ipynb) |
@@ -21,6 +35,13 @@ Notas, código y ejercicios del curso de Ciencia de Datos. Cada módulo correspo
 ```
 Clasespavos2026/
 ├── index.html                        # Página principal
+├── terminal.html
+├── variables.html
+├── entrada-salida.html
+├── operadores.html
+├── git-basico.html
+├── condicionales.html
+├── listas-cadenas.html
 ├── numpy.html
 ├── visualizacion.html
 ├── eda.html
