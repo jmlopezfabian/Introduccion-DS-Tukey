@@ -30,51 +30,6 @@ Notas, código y ejercicios del curso de Ciencia de Datos. Cada módulo correspo
 | 08 | Pruebas de Hipótesis | [pruebas-hipotesis.html](docs/pruebas-hipotesis.html) | [pruebas_hipotesis.ipynb](notebooks/pruebas_hipotesis.ipynb) |
 | — | Ejercicios Prácticos | [ejercicios.html](docs/ejercicios.html) | [ejercicios_practicos.ipynb](notebooks/ejercicios/ejercicios_practicos.ipynb) |
 
-## Estructura
-
-```
-Clases-DS-Tukey/
-├── index.html                        # Página principal
-│
-├── docs/                             # Páginas HTML de cada módulo
-│   ├── terminal.html
-│   ├── variables.html
-│   ├── entrada-salida.html
-│   ├── operadores.html
-│   ├── git-basico.html
-│   ├── condicionales.html
-│   ├── listas-cadenas.html
-│   ├── numpy.html
-│   ├── visualizacion.html
-│   ├── eda.html
-│   ├── regresion-simple.html
-│   ├── gradiente.html
-│   ├── regresion-statsmodels.html
-│   ├── regresion-avanzada.html
-│   ├── pruebas-hipotesis.html
-│   └── ejercicios.html
-│
-├── notebooks/
-│   ├── numpy.ipynb
-│   ├── matplotlib.ipynb
-│   ├── notebook.ipynb
-│   ├── regresion.ipynb
-│   ├── gradiente.ipynb
-│   ├── regresion_lib.ipynb
-│   ├── regresion_final.ipynb
-│   ├── pruebas_hipotesis.ipynb
-│   └── ejercicios/
-│       └── ejercicios_practicos.ipynb
-│
-├── data/
-│   └── csvs/
-│       └── examenes.csv
-│
-├── app.py                            # Dashboard Streamlit
-├── utils.py                          # Funciones auxiliares
-└── requirements.txt
-```
-
 ## Instalación
 
 ```bash
