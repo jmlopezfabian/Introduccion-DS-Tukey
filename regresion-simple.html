@@ -18,18 +18,18 @@
   .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
   .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
   .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
-  .wrap{display:grid;grid-template-columns:200px 1fr;gap:56px;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px;align-items:start}
-  aside{position:sticky;top:72px;}
-  .nb-ref{display:flex;align-items:center;gap:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:32px;font-size:12.5px}
-  .nb-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);flex-shrink:0}
-  .nb-ref a{color:var(--accent);font-family:'JetBrains Mono',monospace}
-  .toc-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
-  .toc ul{list-style:none}.toc li{margin-bottom:1px}
-  .toc a{font-size:12.5px;color:var(--text-2);display:block;padding:4px 8px;border-radius:5px;border-left:2px solid transparent;transition:all .15s}
-  .toc a:hover{color:var(--text);text-decoration:none}
-  .toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim)}
-  .toc .sub{padding-left:14px}
-  .content{min-width:0}
+  /* LAYOUT */
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  /* SIDEBAR */
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  /* CONTENT */
+  .content{flex:1;min-width:0}
   .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
   .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
   h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
@@ -56,7 +56,7 @@
   .dbody{padding:16px 18px;border-top:1px solid var(--border)}
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
-  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}aside{position:static;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;max-height:none}}
+  @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
 <body>
@@ -70,19 +70,22 @@
 </nav>
 
 <div class="wrap">
-  <aside>
-    <div class="toc-label">Contenido</div>
-    <nav class="toc"><ul>
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
       <li><a href="#intro">Introducción</a></li>
       <li><a href="#recta">La recta y = mx + b</a></li>
       <li><a href="#ecm">Función de pérdida ECM</a></li>
       <li><a href="#busqueda">Búsqueda por fuerza bruta</a></li>
-      <li><a href="#formula-cerrada">Fórmula cerrada</a></li>
-      <li class="sub"><a href="#pendiente">Pendiente óptima</a></li>
-      <li class="sub"><a href="#ordenada">Ordenada al origen</a></li>
+      <li><a href="#formula-cerrada">Fórmula cerrada</a>
+        <ol>
+          <li><a href="#pendiente">Pendiente óptima</a></li>
+          <li><a href="#ordenada">Ordenada al origen</a></li>
+        </ol>
+      </li>
       <li><a href="#implementacion">Implementación completa</a></li>
       <li><a href="#metricas">Métricas de evaluación</a></li>
-    </ul></nav>
+    </ol>
   </aside>
 
   <main class="content">
@@ -264,12 +267,12 @@ print(f"R²:   {r2:.4f}")</code></pre>
 <script>
   hljs.highlightAll();
   const heads = document.querySelectorAll('h2[id],h3[id]');
-  const links = document.querySelectorAll('.toc a');
+  const links = document.querySelectorAll('.toc-sidebar a');
   const obs = new IntersectionObserver(e => {
     e.forEach(en => {
       if (en.isIntersecting) {
         links.forEach(l => l.classList.remove('active'));
-        const a = document.querySelector(`.toc a[href="#${en.target.id}"]`);
+        const a = document.querySelector(`.toc-sidebar a[href="#${en.target.id}"]`);
         if (a) a.classList.add('active');
       }
     });
