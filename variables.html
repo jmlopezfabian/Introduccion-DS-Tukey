@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variables y Tipos de Datos — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.875rem}
+  th{text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);color:var(--text-3);font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-2)}
+  tr:last-child td{border-bottom:none}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Variables y Tipos de Datos</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#variables">Variables</a>
+        <ol>
+          <li><a href="#reglas">Reglas de nombres</a></li>
+        </ol>
+      </li>
+      <li><a href="#print">Función print()</a></li>
+      <li><a href="#tipos">Tipos de datos</a>
+        <ol>
+          <li><a href="#type">Función type()</a></li>
+          <li><a href="#dinamico">Tipado dinámico</a></li>
+        </ol>
+      </li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">B2 — variables</div>
+      <h1>Variables y Tipos de Datos</h1>
+      <p class="lead">Las variables son el mecanismo básico para guardar información en un programa. Python las maneja con tipado dinámico: no necesitas declarar el tipo, Python lo infiere solo.</p>
+    </div>
+
+    <h2 id="variables">Variables</h2>
+    <p>Imagina que quieres guardar los datos de una persona: nombre, edad, altura, pasatiempo. Una opción sería escribir esos valores directamente cada vez que los necesitas. Eso no es práctico.</p>
+    <p>En programación usamos <strong>variables</strong> para guardar datos y reutilizarlos. Piensa en una variable como una caja con etiqueta: la etiqueta es el nombre, y dentro va el valor.</p>
+
+    <div class="def">
+      <div class="def-label">Definición</div>
+      <p>Una <strong>variable</strong> es un espacio en la memoria de la computadora identificado por un nombre, que almacena un valor que puede cambiar a lo largo del programa.</p>
+    </div>
+
+    <p>Para asignar un valor a una variable se usa el signo <code>=</code>:</p>
+    <pre><code class="language-python">nombre = "Jesús"
+edad   = 22
+altura = 1.68</code></pre>
+
+    <h3 id="reglas">Reglas para nombrar variables</h3>
+    <ul>
+      <li>Deben comenzar con una letra o guión bajo (<code>_</code>), nunca con un número.</li>
+      <li>Solo pueden contener letras, números y guiones bajos.</li>
+      <li>Son sensibles a mayúsculas: <code>edad</code> y <code>Edad</code> son variables distintas.</li>
+      <li>No pueden ser palabras reservadas de Python como <code>if</code>, <code>for</code>, <code>print</code>, etc.</li>
+    </ul>
+
+    <h2 id="print">Función <code>print()</code></h2>
+    <p>Una vez que guardas un valor en una variable puedes mostrarlo en pantalla con <code>print()</code>.</p>
+    <pre><code class="language-python">nombre = "Jesús"
+edad   = 22
+print(nombre)  # Jesús
+print(edad)    # 22</code></pre>
+
+    <p>También puedes combinar texto y variables en un mismo <code>print()</code> separándolos con comas:</p>
+    <pre><code class="language-python">print("Mi nombre es", nombre, "y tengo", edad, "años")
+# Mi nombre es Jesús y tengo 22 años</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Texto que contiene comillas</summary>
+      <div class="dbody">
+        <p>Si el texto incluye comillas simples, enciérralo con comillas dobles y viceversa:</p>
+        <pre><code class="language-python">frase = "Python es el lenguaje 'favorito' de muchos"
+print(frase)
+# Python es el lenguaje 'favorito' de muchos</code></pre>
+      </div>
+    </details>
+
+    <h2 id="tipos">Tipos de datos</h2>
+    <p>Cada valor en Python tiene un <strong>tipo</strong> que determina qué operaciones puedes hacer con él. Los tres tipos más comunes al empezar son:</p>
+
+    <table>
+      <thead>
+        <tr><th>Tipo</th><th>Descripción</th><th>Ejemplo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>str</code></td><td>Texto (cadena de caracteres)</td><td><code>"Hola"</code></td></tr>
+        <tr><td><code>int</code></td><td>Número entero</td><td><code>22</code></td></tr>
+        <tr><td><code>float</code></td><td>Número con decimales</td><td><code>1.68</code></td></tr>
+      </tbody>
+    </table>
+
+    <p>Cuando escribes texto siempre debes encerrarlo entre comillas (simples o dobles). Si no lo haces, Python lo interpretará como el nombre de una variable y dará error.</p>
+
+    <h3 id="type">Función <code>type()</code></h3>
+    <p>Para saber de qué tipo es una variable usa <code>type()</code>:</p>
+    <pre><code class="language-python">nombre = "Jesús"
+edad   = 22
+altura = 1.68
+
+print(type(nombre))  # &lt;class 'str'&gt;
+print(type(edad))    # &lt;class 'int'&gt;
+print(type(altura))  # &lt;class 'float'&gt;</code></pre>
+
+    <h3 id="dinamico">Tipado dinámico</h3>
+    <p>En Python no necesitas declarar el tipo de una variable: Python lo detecta automáticamente según el valor que le asignas. Además, puedes cambiar el tipo de una variable en cualquier momento reasignándola.</p>
+    <pre><code class="language-python">altura = 1.68        # float
+altura = "uno punto sesenta y ocho"  # ahora es str
+print(type(altura))  # &lt;class 'str'&gt;</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> ¿Por qué tipado dinámico?</summary>
+      <div class="dbody">
+        <p>En lenguajes de tipado estático (como Java o C++) debes declarar el tipo antes de usarlo: <code>int edad = 22;</code>. Python elimina esa burocracia. El tipo queda ligado al <em>valor</em>, no a la variable, lo que agiliza el código exploratorio y científico. La contrapartida es que los errores de tipo aparecen en ejecución, no en compilación.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+</body>
+</html>

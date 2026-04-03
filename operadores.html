@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operadores Aritméticos — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Operadores Aritméticos</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#operadores">Operadores</a></li>
+      <li><a href="#comentarios">Comentarios</a></li>
+      <li><a href="#perceptron">Ejemplo: Perceptrón</a></li>
+      <li><a href="#regresion">Ejemplo: Regresión lineal</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">B4 — operadores</div>
+      <h1>Operadores Aritméticos</h1>
+      <p class="lead">Los operadores aritméticos son los bloques básicos del cálculo en Python. Con ellos se construyen desde fórmulas simples hasta modelos de aprendizaje automático.</p>
+    </div>
+
+    <h2 id="operadores">Operadores disponibles</h2>
+    <p>Python incluye los operadores matemáticos habituales más algunos adicionales muy útiles en ciencia de datos:</p>
+
+    <pre><code class="language-python">a = 5
+b = 3
+
+print(a + b)   # Suma            → 8
+print(a - b)   # Resta           → 2
+print(a * b)   # Multiplicación  → 15
+print(a / b)   # División        → 1.6666...
+print(a // b)  # División entera → 1   (descarta los decimales)
+print(a % b)   # Módulo (resto)  → 2
+print(a ** b)  # Potencia        → 125</code></pre>
+
+    <p>El resultado de una operación puede guardarse en una nueva variable:</p>
+
+    <pre><code class="language-python">suma = a + b
+print(suma)  # 8</code></pre>
+
+    <div class="def">
+      <div class="def-label">División entera vs. módulo</div>
+      <p><code>//</code> devuelve el cociente entero de la división; <code>%</code> devuelve el resto. Juntos reproducen la división con residuo: \( 5 = 3 \cdot 1 + 2 \).</p>
+    </div>
+
+    <h2 id="comentarios">Comentarios</h2>
+    <p>Los comentarios son texto que Python ignora al ejecutar. Se escriben con <code>#</code> y sirven para explicar qué hace el código.</p>
+
+    <pre><code class="language-python">resultado = a * b  # esto es un comentario, no se ejecuta</code></pre>
+
+    <p>Un buen comentario explica el <em>por qué</em>, no el <em>qué</em>. Si el código ya dice lo que hace, el comentario es redundante.</p>
+
+    <h2 id="perceptron">Ejemplo: Perceptrón</h2>
+    <p>Un <strong>perceptrón</strong> es la unidad básica de las redes neuronales. Toma varias entradas \(x_i\), las multiplica por pesos \(w_i\), suma un sesgo \(b\) y produce una salida.</p>
+
+    <div class="formula">
+      \[ \text{salida} = x_1 w_1 + x_2 w_2 + b \]
+    </div>
+
+    <p>Donde \(x_1\) y \(x_2\) son las entradas, \(w_1\) y \(w_2\) son los pesos que indican la importancia de cada entrada, y \(b\) es el sesgo que desplaza la predicción.</p>
+
+    <pre><code class="language-python"># Entradas del usuario (calificaciones de dos exámenes)
+x1 = float(input("Ingresa el valor de x1: "))
+x2 = float(input("Ingresa el valor de x2: "))
+
+# Pesos y sesgo definidos por el modelo
+w1 = 0.5
+w2 = 0.7
+b  = -1.0
+
+# Cálculo de la salida
+salida = (x1 * w1) + (x2 * w2) + b
+print(f"La salida del perceptrón es: {salida}")</code></pre>
+
+    <p>En clases posteriores veremos cómo el proceso de entrenamiento ajusta automáticamente los valores de \(w_1\), \(w_2\) y \(b\).</p>
+
+    <h2 id="regresion">Ejemplo: Regresión lineal</h2>
+    <p>La <strong>regresión lineal</strong> busca la recta \(\hat{y} = mx + b\) que mejor se ajusta a un conjunto de datos. Los parámetros \(m\) (pendiente) y \(b\) (intercepto) se obtienen con fórmulas cerradas:</p>
+
+    <div class="formula">
+      \[ m = \frac{n \sum xy - \sum x \sum y}{n \sum x^2 - \left(\sum x\right)^2} \qquad b = \frac{\sum y \sum x^2 - \sum x \sum xy}{n \sum x^2 - \left(\sum x\right)^2} \]
+    </div>
+
+    <pre><code class="language-python"># Estadísticos del conjunto de datos
+n              = 30
+suma_x         = 110
+suma_y         = 114
+suma_xy        = 500
+suma_x2        = 300
+suma_x_al2     = 350   # (suma_x)^2
+
+# Denominador compartido
+denominador = (n * suma_x2) - suma_x_al2
+
+# Pendiente e intercepto
+m = ((n * suma_xy) - (suma_x * suma_y)) / denominador
+b = ((suma_y * suma_x2) - (suma_x * suma_xy)) / denominador
+
+print(f"Pendiente m = {m:.4f}")
+print(f"Intercepto b = {b:.4f}")</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Hacer una predicción con la recta</summary>
+      <div class="dbody">
+        <p>Una vez que tienes \(m\) y \(b\), predecir para un nuevo valor \(x\) es directo:</p>
+        <pre><code class="language-python">x_nuevo = float(input("Ingresa el valor de x: "))
+y_pred  = m * x_nuevo + b
+print(f"Predicción: {y_pred:.2f}")</code></pre>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> ¿De dónde vienen esas fórmulas?</summary>
+      <div class="dbody">
+        <p>Las fórmulas de \(m\) y \(b\) minimizan el <strong>error cuadrático medio</strong> (ECM) entre las predicciones y los valores reales. Derivar el ECM respecto a \(m\) y \(b\), igualarlo a cero y despejar lleva exactamente a esas expresiones. En el módulo de regresión lineal lo veremos con detalle.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+</body>
+</html>

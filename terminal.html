@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Terminal</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#instalacion">Instalación de Git</a></li>
+      <li><a href="#comandos">Comandos básicos</a>
+        <ol>
+          <li><a href="#pwd">pwd</a></li>
+          <li><a href="#ls">ls</a></li>
+          <li><a href="#cd">cd</a></li>
+          <li><a href="#mkdir">mkdir</a></li>
+          <li><a href="#touch">touch</a></li>
+          <li><a href="#rm">rm</a></li>
+          <li><a href="#mv">mv</a></li>
+        </ol>
+      </li>
+      <li><a href="#rutas">Rutas: . y ..</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">B1 — terminal</div>
+      <h1>Introducción a la Línea de Comandos</h1>
+      <p class="lead">La terminal es la interfaz de texto con el sistema operativo. Dominar sus comandos básicos te permite navegar, crear y gestionar archivos sin usar el ratón.</p>
+    </div>
+
+    <h2 id="instalacion">Instalación de Git</h2>
+    <p>Antes de usar la terminal en Windows es necesario instalar <strong>Git Bash</strong>, que incluye la terminal de Unix junto con Git. Los usuarios de Mac y Linux ya tienen una terminal disponible.</p>
+
+    <div class="def">
+      <div class="def-label">Windows</div>
+      <p>Durante la instalación de Git, en la pantalla de configuración de PATH, selecciona la segunda opción: <em>"Git from the command line and also from 3rd-party software"</em>. Para todo lo demás puedes hacer clic en Siguiente.</p>
+    </div>
+
+    <p>Una vez instalado, abre <strong>Git Bash</strong> (Windows) o la <strong>Terminal</strong> (Mac/Linux) para continuar.</p>
+
+    <h2 id="comandos">Comandos básicos</h2>
+    <p>Estos son los comandos que usarás en prácticamente todos los proyectos. No hace falta memorizarlos ahora, se vuelven automáticos con el uso.</p>
+
+    <h3 id="pwd">1. Ver en qué carpeta estás</h3>
+    <p><code>pwd</code> (<em>print working directory</em>) muestra la ruta completa del directorio actual.</p>
+    <pre><code class="language-bash">pwd
+# /Users/Jesus</code></pre>
+
+    <h3 id="ls">2. Listar archivos y carpetas</h3>
+    <p><code>ls</code> muestra el contenido del directorio en el que te encuentras.</p>
+    <pre><code class="language-bash">ls
+# Documentos  Proyectos  hola.py</code></pre>
+
+    <h3 id="cd">3. Cambiar de directorio</h3>
+    <p><code>cd</code> (<em>change directory</em>) te mueve a otra carpeta. Escribe el nombre de la carpeta a la que quieres entrar.</p>
+    <pre><code class="language-bash">cd Documents
+# ahora estás dentro de Documents</code></pre>
+
+    <p>Para volver al directorio anterior (el "padre"), usa <code>cd ..</code>:</p>
+    <pre><code class="language-bash">cd ..
+# regresaste un nivel arriba</code></pre>
+
+    <h3 id="mkdir">4. Crear una carpeta</h3>
+    <p><code>mkdir</code> (<em>make directory</em>) crea una nueva carpeta en tu ubicación actual.</p>
+    <pre><code class="language-bash">mkdir Proyectos
+# se crea la carpeta "Proyectos"</code></pre>
+
+    <h3 id="touch">5. Crear un archivo vacío</h3>
+    <p><code>touch</code> crea un archivo con el nombre y extensión que le indiques.</p>
+    <pre><code class="language-bash">touch hola.py
+# se crea el archivo "hola.py" en el directorio actual</code></pre>
+
+    <h3 id="rm">6. Eliminar archivos y carpetas</h3>
+    <p>Para eliminar un archivo usa <code>rm</code>. Para eliminar una carpeta y todo su contenido agrega la bandera <code>-r</code> (recursivo).</p>
+    <pre><code class="language-bash">rm saludo.txt          # elimina el archivo
+rm -r Proyectos        # elimina la carpeta y todo su interior</code></pre>
+
+    <div class="def">
+      <div class="def-label">Precaución</div>
+      <p><code>rm</code> elimina permanentemente, sin pasar por la papelera. Verifica bien el nombre antes de ejecutarlo.</p>
+    </div>
+
+    <h3 id="mv">7. Mover o renombrar</h3>
+    <p><code>mv</code> sirve para dos cosas: mover un archivo a otra carpeta, o cambiarle el nombre.</p>
+    <pre><code class="language-bash"># Mover
+mv hola.py /Users/Jesus/Proyectos/
+
+# Renombrar
+mv hola.py hola_mundo.py</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Limpiar la pantalla</summary>
+      <div class="dbody">
+        <p>Cuando la terminal se llena de texto y quieres empezar visual­mente de cero, usa <code>clear</code>. No borra el historial, solo limpia la vista.</p>
+        <pre><code class="language-bash">clear</code></pre>
+      </div>
+    </details>
+
+    <h2 id="rutas">Rutas: <code>.</code> y <code>..</code></h2>
+    <p>En la terminal, <code>.</code> representa el <strong>directorio actual</strong> y <code>..</code> representa el <strong>directorio padre</strong>. Puedes combinarlos con rutas para navegar con precisión.</p>
+
+    <pre><code class="language-bash">cd ..               # sube un nivel
+cd ../otra-carpeta  # sube un nivel y entra a "otra-carpeta"
+mv hola.py ./Proyectos/   # mueve hola.py a Proyectos (que está aquí mismo)</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> Rutas absolutas vs. relativas</summary>
+      <div class="dbody">
+        <p>Una <strong>ruta absoluta</strong> empieza desde la raíz del sistema (<code>/</code> en Mac/Linux, <code>C:\</code> en Windows) y siempre funciona sin importar dónde estés parado.</p>
+        <p>Una <strong>ruta relativa</strong> parte desde donde estás ahora. Usa <code>.</code> y <code>..</code> para navegar relativamente al directorio actual. Es más corta de escribir pero depende de tu ubicación.</p>
+        <pre><code class="language-bash"># Ruta absoluta
+cd /Users/Jesus/Documents/Proyectos
+
+# Ruta relativa (desde /Users/Jesus)
+cd Documents/Proyectos</code></pre>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+</body>
+</html>

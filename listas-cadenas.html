@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iterar Listas y Cadenas — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Iterar Listas y Cadenas</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#listas">Listas</a></li>
+      <li><a href="#for">Bucle for</a>
+        <ol>
+          <li><a href="#for-lista">Iterar una lista</a></li>
+          <li><a href="#for-cadena">Iterar una cadena</a></li>
+          <li><a href="#acumulador">Patrón acumulador</a></li>
+        </ol>
+      </li>
+      <li><a href="#range">range()</a></li>
+      <li><a href="#enumerate">enumerate()</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">B7 — listas</div>
+      <h1>Iterar Listas y Cadenas</h1>
+      <p class="lead">Las listas agrupan múltiples valores en una sola variable. El bucle <code>for</code> te permite recorrer cada elemento y aplicarle operaciones, uno por uno.</p>
+    </div>
+
+    <h2 id="listas">Listas</h2>
+    <p>Hasta ahora cada variable guardaba un solo valor. Una <strong>lista</strong> guarda varios valores en orden, separados por comas y entre corchetes.</p>
+
+    <pre><code class="language-python">numeros  = [1, 2, 3, 4, 5]
+nombres  = ["Ana", "Luis", "María"]
+mixta    = [10, "hola", 3.14, True]</code></pre>
+
+    <div class="def">
+      <div class="def-label">Definición</div>
+      <p>Una <strong>lista</strong> es una colección ordenada y mutable de elementos. Ordenada significa que el orden importa (el primero es siempre el primero). Mutable significa que puedes cambiar, agregar o quitar elementos después de crearla.</p>
+    </div>
+
+    <p>Accedes a un elemento por su <strong>índice</strong>, que empieza en <code>0</code>:</p>
+
+    <pre><code class="language-python">numeros = [10, 20, 30, 40]
+print(numeros[0])   # 10  ← primer elemento
+print(numeros[-1])  # 40  ← último elemento</code></pre>
+
+    <h2 id="for">Bucle <code>for</code></h2>
+    <p>El bucle <code>for</code> recorre cada elemento de una secuencia (lista, cadena, rango…) y ejecuta un bloque de código por cada uno. La variable de iteración toma el valor del elemento en cada vuelta.</p>
+
+    <pre><code class="language-python">for variable in secuencia:
+    # código que se ejecuta en cada vuelta</code></pre>
+
+    <h3 id="for-lista">Iterar una lista</h3>
+    <pre><code class="language-python">numeros = [1, 2, 3, 4, 5]
+
+for numero in numeros:
+    print(numero)
+# 1
+# 2
+# 3
+# 4
+# 5</code></pre>
+
+    <h3 id="for-cadena">Iterar una cadena</h3>
+    <p>Las cadenas de texto también son secuencias: puedes recorrerlas letra por letra. Esto es útil para filtrar o transformar texto.</p>
+
+    <pre><code class="language-python">cadena = "Hola Mundo"
+vocales = ["a", "e", "i", "o", "u"]
+
+cadena = cadena.lower()   # convertir a minúsculas primero
+
+for letra in cadena:
+    if letra in vocales:
+        print(letra)
+# o
+# a
+# u
+# o</code></pre>
+
+    <h3 id="acumulador">Patrón acumulador</h3>
+    <p>Un patrón muy común es iniciar una variable en cero (o lista vacía) y acumular resultados dentro del bucle:</p>
+
+    <pre><code class="language-python">numeros = [1, 2, 3, 4, 5]
+suma = 0
+
+for numero in numeros:
+    suma += numero   # equivale a: suma = suma + numero
+
+print("La suma es:", suma)   # La suma es: 15</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Calcular el promedio de una lista</summary>
+      <div class="dbody">
+        <pre><code class="language-python">calificaciones = [8.5, 9.0, 7.5, 10.0, 6.0]
+total = 0
+
+for cal in calificaciones:
+    total += cal
+
+promedio = total / len(calificaciones)
+print(f"Promedio: {promedio:.2f}")   # Promedio: 8.20</code></pre>
+        <p><code>len()</code> devuelve el número de elementos de la lista.</p>
+      </div>
+    </details>
+
+    <h2 id="range">Función <code>range()</code></h2>
+    <p>Cuando necesitas repetir algo un número fijo de veces usas <code>range()</code>, que genera una secuencia de números sin necesidad de escribirlos a mano.</p>
+
+    <pre><code class="language-python">for i in range(5):
+    print(i)
+# 0  1  2  3  4</code></pre>
+
+    <p><code>range(inicio, fin, paso)</code> permite mayor control:</p>
+
+    <pre><code class="language-python">for i in range(0, 10, 2):
+    print(i)
+# 0  2  4  6  8</code></pre>
+
+    <h2 id="enumerate">Función <code>enumerate()</code></h2>
+    <p>Cuando necesitas el índice <em>y</em> el valor al mismo tiempo, <code>enumerate()</code> te da ambos en cada vuelta sin tener que llevar un contador manual.</p>
+
+    <pre><code class="language-python">nombres = ["Ana", "Luis", "María"]
+
+for i, nombre in enumerate(nombres):
+    print(f"{i}: {nombre}")
+# 0: Ana
+# 1: Luis
+# 2: María</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> List comprehensions: for en una línea</summary>
+      <div class="dbody">
+        <p>Python permite construir listas nuevas a partir de iteraciones en una sola expresión. Se llaman <strong>list comprehensions</strong>:</p>
+        <pre><code class="language-python">numeros  = [1, 2, 3, 4, 5]
+cuadrados = [n ** 2 for n in numeros]
+print(cuadrados)   # [1, 4, 9, 16, 25]
+
+# Con filtro
+pares = [n for n in numeros if n % 2 == 0]
+print(pares)       # [2, 4]</code></pre>
+        <p>Son más concisas que el bucle explícito y se consideran idiomáticas en Python. Úsalas cuando la transformación es simple y el código sigue siendo legible.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+</body>
+</html>

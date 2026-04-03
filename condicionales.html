@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root {
+    --bg:#0f0f11; --bg-alt:#17171b; --border:#2a2a30;
+    --accent:#6c7fea; --accent-dim:rgba(108,127,234,.1);
+    --text:#e2e2e8; --text-2:#8a8a9a; --text-3:#525260;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}
+  .nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}
+  .nav-current{color:var(--text);font-weight:500}
+
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px;padding-top:4px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}
+  li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.875rem}
+  th{text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);color:var(--text-3);font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-2)}
+  tr:last-child td{border-bottom:none}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}
+  details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Condicionales</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#condiciones">Condiciones</a></li>
+      <li><a href="#estructura">if / elif / else</a></li>
+      <li><a href="#logicos">Operadores lógicos</a></li>
+      <li><a href="#activacion">Aplicación: función de activación</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-head">
+      <div class="page-mod">B6 — condicionales</div>
+      <h1>Condicionales</h1>
+      <p class="lead">Los condicionales permiten que un programa tome decisiones: ejecutar un bloque de código u otro dependiendo de si una condición es verdadera o falsa.</p>
+    </div>
+
+    <h2 id="condiciones">Condiciones</h2>
+    <p>Una <strong>condición</strong> es una expresión que Python evalúa como <code>True</code> o <code>False</code>. Para formarlas usamos <strong>operadores de comparación</strong>:</p>
+
+    <table>
+      <thead>
+        <tr><th>Operador</th><th>Significado</th><th>Ejemplo</th><th>Resultado</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>==</code></td><td>Igual a</td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>!=</code></td><td>Diferente de</td><td><code>5 != 3</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&gt;</code></td><td>Mayor que</td><td><code>5 &gt; 3</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;</code></td><td>Menor que</td><td><code>5 &lt; 3</code></td><td><code>False</code></td></tr>
+        <tr><td><code>&gt;=</code></td><td>Mayor o igual</td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;=</code></td><td>Menor o igual</td><td><code>5 &lt;= 3</code></td><td><code>False</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="estructura">Estructura <code>if</code> / <code>elif</code> / <code>else</code></h2>
+    <p>La palabra clave <code>if</code> evalúa una condición. Si es verdadera, ejecuta el bloque indentado debajo. <code>elif</code> agrega condiciones adicionales. <code>else</code> captura todos los casos que no cumplieron ninguna condición anterior.</p>
+
+    <pre><code class="language-python">if condición1:
+    # se ejecuta si condición1 es True
+elif condición2:
+    # se ejecuta si condición2 es True
+else:
+    # se ejecuta si ninguna condición fue True</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Clasificar la edad de una persona</summary>
+      <div class="dbody">
+        <pre><code class="language-python">edad = 18
+
+if edad < 18:
+    print("Eres menor de edad")
+elif edad == 18:
+    print("Tienes exactamente 18 años")
+else:
+    print("Eres mayor de edad")</code></pre>
+        <p>Con <code>edad = 18</code> se imprime <code>Tienes exactamente 18 años</code>. Python evalúa las condiciones en orden y ejecuta solo el primer bloque que sea verdadero.</p>
+      </div>
+    </details>
+
+    <div class="def">
+      <div class="def-label">Indentación obligatoria</div>
+      <p>En Python el bloque de código de cada rama se delimita con <strong>sangría</strong> (indentación), no con llaves. El estándar es 4 espacios. Si la indentación es incorrecta, Python lanza un error.</p>
+    </div>
+
+    <h2 id="logicos">Operadores lógicos</h2>
+    <p>Para combinar varias condiciones en una sola expresión usamos los <strong>operadores lógicos</strong>:</p>
+
+    <ul>
+      <li><code>and</code> — verdadero solo si <em>ambas</em> condiciones son verdaderas.</li>
+      <li><code>or</code> — verdadero si <em>al menos una</em> condición es verdadera.</li>
+      <li><code>not</code> — invierte el valor: convierte <code>True</code> en <code>False</code> y viceversa.</li>
+    </ul>
+
+    <pre><code class="language-python">edad = 20
+
+if edad < 18:
+    print("Menor de edad")
+elif edad >= 18 and edad < 65:
+    print("Adulto")       # se imprime esto
+else:
+    print("Adulto mayor")</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Validar contraseña con <code>and</code> y <code>not</code></summary>
+      <div class="dbody">
+        <pre><code class="language-python">password = input("Ingresa tu contraseña: ")
+
+if len(password) >= 8 and not password == "12345678":
+    print("Contraseña válida")
+else:
+    print("Contraseña demasiado débil o corta")</code></pre>
+      </div>
+    </details>
+
+    <h2 id="activacion">Aplicación: función de activación</h2>
+    <p>En aprendizaje automático, el <strong>perceptrón</strong> calcula una combinación lineal de sus entradas y luego le aplica una <strong>función de activación</strong> para decidir si "dispara" o no.</p>
+    <p>La función escalonada (<em>step function</em>) es la más simple: devuelve 1 si la salida supera un umbral, y 0 en caso contrario.</p>
+
+    <div class="formula">
+      \[ f(z) = \begin{cases} 1 & \text{si } z \geq 0 \\ 0 & \text{si } z < 0 \end{cases} \]
+    </div>
+
+    <pre><code class="language-python">x1 = float(input("Calificación examen 1: "))
+x2 = float(input("Calificación examen 2: "))
+
+w1 = 0.5
+w2 = 0.7
+b  = -1.0
+
+salida = (x1 * w1) + (x2 * w2) + b
+
+if salida >= 0:
+    print("El alumno aprueba (salida = 1)")
+else:
+    print("El alumno reprueba (salida = 0)")</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> ¿Por qué no se usa la función escalonada en redes modernas?</summary>
+      <div class="dbody">
+        <p>La función escalonada no es diferenciable en \(z = 0\), lo que impide calcular gradientes y por ende entrenar la red mediante gradiente descendente. Las redes modernas usan funciones como <strong>ReLU</strong> \(\max(0, z)\) o <strong>sigmoide</strong> \(\frac{1}{1+e^{-z}}\), que son diferenciables casi en todos sus puntos.</p>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+</body>
+</html>
