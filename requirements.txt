@@ -2,3 +2,8 @@ pandas
 numpy
 seaborn
 matplotlib
+streamlit
+scipy
+statsmodels
+scikit-learn
+jupyter

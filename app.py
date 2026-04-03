@@ -7,7 +7,7 @@ st.title("Dashboard estudiantes")
 
 st.text("Análisis exploratorio de datos de estudiantes")
 
-df = pd.read_csv("/home/gsu/nuevoProyecto/data/csvs/examenes.csv")
+df = pd.read_csv("data/csvs/examenes.csv")
 
 st.write(df.head())
 
