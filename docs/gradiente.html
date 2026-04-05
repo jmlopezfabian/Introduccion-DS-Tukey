@@ -56,6 +56,9 @@
   .dbody{padding:16px 18px;border-top:1px solid var(--border)}
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -141,6 +144,11 @@
     </ul>
     <p>Valores típicos de prueba: <code>0.1</code>, <code>0.01</code>, <code>0.001</code>. Se elige mediante experimentación.</p>
 
+    <div class="fig">
+      <img src="assets/gradiente/ecm-pendiente.png" alt="ECM en función del valor de la pendiente con b fijo">
+      <div class="fig-caption">ECM según el valor de la pendiente \(m\) (con \(b = 40\) fijo). La curva tiene un único mínimo: el gradiente apunta hacia él desde cualquier punto. Un learning rate demasiado grande saltaría de un lado al otro.</div>
+    </div>
+
     <h2 id="derivacion">Derivación del gradiente para regresión lineal</h2>
     <p>Para el ECM con modelo \(\hat{y} = mx + b\), las derivadas parciales son:</p>
     <div class="formula">
@@ -191,6 +199,11 @@ for i in range(n_iter):
 
 print(f"\nResultado: m={m:.4f}, b={b:.4f}")</code></pre>
 
+    <div class="fig">
+      <img src="assets/gradiente/scatter-datos.png" alt="Scatter plot de horas de estudio vs calificación del examen">
+      <div class="fig-caption">Datos reales: horas de estudio vs calificación del examen. Este es el punto de partida del gradiente descendente — buscamos la recta que mejor atraviesa esta nube de puntos.</div>
+    </div>
+
     <h2 id="convergencia">Convergencia y diagnóstico</h2>
     <p>Para verificar que el algoritmo converge, se grafica el ECM en función del número de iteraciones. La curva debe descender y aplanarse:</p>
     <pre><code class="language-python">import matplotlib.pyplot as plt
@@ -210,6 +223,11 @@ ax.set_xlabel("Iteración")
 ax.set_ylabel("ECM")
 ax.set_title("Convergencia del gradiente descendente")
 plt.show()</code></pre>
+
+    <div class="fig">
+      <img src="assets/gradiente/convergencia.png" alt="Curva de convergencia del ECM y recta ajustada por gradiente descendente">
+      <div class="fig-caption">Izquierda: el ECM disminuye en cada iteración y se estabiliza cuando el algoritmo converge. Derecha: la recta ajustada resultante sobre los datos reales.</div>
+    </div>
 
     <details class="dive">
       <summary><span class="tag">Profundización</span> Variantes del gradiente descendente</summary>

@@ -60,6 +60,9 @@
   th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3)}
   td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
   tr:last-child td{border-bottom:none}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -218,6 +221,11 @@ else:
 P-valor:       0.000000
 Rechazamos H₀: el método de estudio sí impacta en el exam_score.</code></pre>
 
+    <div class="fig">
+      <img src="assets/pruebas-hipotesis/boxplot-metodos.png" alt="Boxplot de calificaciones por método de estudio">
+      <div class="fig-caption">Distribución de calificaciones por método de estudio. Las medianas difieren visiblemente entre grupos — el coaching presenta calificaciones más altas en promedio. ANOVA confirma que esta diferencia es estadísticamente significativa (p &lt; 0.05).</div>
+    </div>
+
     <h2 id="chi2">Prueba Chi-cuadrada</h2>
     <p>La prueba chi-cuadrada (\(\chi^2\)) evalúa si existe <strong>asociación entre dos variables categóricas</strong>. Compara la distribución observada de frecuencias con la distribución esperada si las variables fueran independientes.</p>
 
@@ -256,6 +264,11 @@ other             1371         1367   1286           1360        1342
 Estadístico chi²: 11.72
 P-valor:          0.1641
 No rechazamos H₀: género y método de estudio son independientes.</code></pre>
+
+    <div class="fig">
+      <img src="assets/pruebas-hipotesis/tabla-contingencias.png" alt="Heatmap de la tabla de contingencias género × método de estudio">
+      <div class="fig-caption">Tabla de contingencias: frecuencias de cada combinación de género y método de estudio. La distribución es muy uniforme entre filas — esto explica el p-valor alto (0.16): no hay asociación significativa entre género y método de estudio elegido.</div>
+    </div>
 
     <h2 id="eleccion">¿Cuál prueba usar?</h2>
     <table>

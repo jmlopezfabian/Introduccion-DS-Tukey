@@ -56,6 +56,9 @@
   .dbody{padding:16px 18px;border-top:1px solid var(--border)}
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -174,6 +177,11 @@ rmse_test  = mean_squared_error(y_test,  pred_test)  ** 0.5
 print(f"RMSE Train: {rmse_train:.2f}")
 print(f"RMSE Test:  {rmse_test:.2f}")</code></pre>
 
+    <div class="fig">
+      <img src="assets/regresion-avanzada/predicciones-vs-reales.png" alt="Predicciones vs valores reales en test, e histograma de residuos">
+      <div class="fig-caption">Izquierda: predicciones del modelo vs valores reales en el conjunto de test. La línea roja punteada es la predicción perfecta. Derecha: distribución de los residuos en test — centrada en cero indica que el modelo no tiene sesgo sistemático.</div>
+    </div>
+
     <div class="def">
       <div class="def-label">Overfitting vs Underfitting</div>
       <p>Si el RMSE de train es mucho menor que el de test, el modelo memorizó los datos de entrenamiento (<strong>overfitting</strong>). Si ambos son altos, el modelo no captura la señal en los datos (<strong>underfitting</strong>). Un buen modelo tiene RMSEs similares y bajos en ambos conjuntos.</p>
@@ -208,6 +216,11 @@ rmse_test_cv  = np.array(lista_rmse_test)
 
 print(f"RMSE Train CV — Media: {rmse_train_cv.mean():.2f}, Std: {rmse_train_cv.std():.2f}")
 print(f"RMSE Test  CV — Media: {rmse_test_cv.mean():.2f},  Std: {rmse_test_cv.std():.2f}")</code></pre>
+
+    <div class="fig">
+      <img src="assets/regresion-avanzada/rmse-folds.png" alt="RMSE de train y test en cada uno de los 10 folds del K-Fold">
+      <div class="fig-caption">RMSE por fold en K-Fold con k=10. Las curvas de train y test son consistentes entre sí, lo que indica que el modelo generaliza bien y no hay overfitting. La pequeña variación entre folds es normal y esperada.</div>
+    </div>
 
     <h2 id="loocv">Leave-One-Out Cross Validation (LOOCV)</h2>
     <p>El LOOCV es el caso extremo de K-Fold donde k = n: cada observación actúa como su propio conjunto de prueba. Es muy preciso pero computacionalmente costoso en datasets grandes.</p>

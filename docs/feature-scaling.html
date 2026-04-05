@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escalado de Features — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  /* LAYOUT */
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  /* SIDEBAR */
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  /* CONTENT */
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  .nb-ref{display:flex;align-items:center;gap:10px;margin-bottom:40px;font-size:.85rem}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);background:var(--bg-alt);border:1px solid var(--border);padding:3px 8px;border-radius:4px}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="../index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Escalado de Features</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#intuicion">El problema de las unidades</a></li>
+      <li><a href="#contornos">Contornos de la función de costo</a></li>
+      <li><a href="#metodos">Métodos de escalado</a>
+        <ol>
+          <li><a href="#minmax">Escalado min-max</a></li>
+          <li><a href="#media">Normalización por media</a></li>
+          <li><a href="#zscore">Z-score</a></li>
+        </ol>
+      </li>
+      <li><a href="#gradiente">Impacto en el gradiente</a></li>
+      <li><a href="#practica">Qué y cuándo escalar</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">09 — feature-scaling</div>
+      <h1>Escalado de Features</h1>
+      <p class="lead">Cuando las variables de entrada tienen rangos muy distintos, el gradiente descendente se vuelve lento e inestable. El escalado corrige ese desequilibrio y permite que el optimizador converja de forma eficiente.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="../notebooks/feature_scaling.ipynb">notebooks/feature_scaling.ipynb</a>
+    </div>
+
+    <!-- SECCIÓN 1 -->
+    <h2 id="intuicion">El problema de las unidades</h2>
+    <p>Imagina que estás entrenando un modelo para predecir el precio de una casa. Tienes dos variables: los metros cuadrados del terreno (valores entre 500 y 5 000) y el número de habitaciones (valores entre 1 y 8).</p>
+    <p>Para el gradiente descendente, un cambio de 1 unidad en metros cuadrados y un cambio de 1 unidad en habitaciones parecen equivalentes. Pero no lo son: en metros cuadrados, pasar de 500 a 501 es insignificante; en habitaciones, pasar de 1 a 2 es un cambio del 100%.</p>
+    <p>Esta asimetría hace que la función de pérdida tenga una forma alargada y desequilibrada. El gradiente apunta en una dirección sesgada, y el algoritmo zigzaguea en lugar de converger directo al mínimo.</p>
+
+    <div class="def">
+      <div class="def-label">Concepto clave</div>
+      <p>El escalado de features transforma cada variable para que opere en un rango comparable. Esto no cambia la información del dataset — solo cambia las <em>unidades</em> en las que se mide cada variable, de modo que el optimizador trate a todas por igual.</p>
+    </div>
+
+    <p>Para ver el problema en código, observa cómo los rangos de dos variables pueden diferir drásticamente:</p>
+    <pre><code class="language-python">import numpy as np
+import pandas as pd
+
+# Datos sintéticos: metros cuadrados y habitaciones
+np.random.seed(42)
+metros = np.random.uniform(500, 5000, 200)      # rango: 500 – 5000
+habitaciones = np.random.randint(1, 9, 200)     # rango: 1 – 8
+
+print(f"metros     — min: {metros.min():.0f}, max: {metros.max():.0f}, std: {metros.std():.1f}")
+print(f"habitaciones — min: {habitaciones.min()}, max: {habitaciones.max()}, std: {habitaciones.std():.2f}")
+# metros     — min: 506, max: 4994, std: 1282.5
+# habitaciones — min: 1, max: 8, std: 2.29</code></pre>
+
+    <p>La desviación estándar de metros es más de 500 veces mayor que la de habitaciones. Cuando el gradiente descendente intenta optimizar ambos parámetros al mismo tiempo, el desequilibrio distorsiona la dirección del descenso.</p>
+
+    <!-- SECCIÓN 2 -->
+    <h2 id="contornos">Contornos de la función de costo</h2>
+    <p>La forma más clara de entender el problema es visualizando los <strong>contornos de la función de costo</strong>. Piensa en ellos como las curvas de nivel de un mapa topográfico: cada curva une todos los puntos con el mismo valor de pérdida.</p>
+    <p>Cuando las features tienen escalas muy diferentes, esos contornos forman <strong>elipses muy alargadas</strong>. El gradiente siempre es perpendicular a los contornos, lo que significa que apunta en la dirección "ancha" de la elipse, no hacia el mínimo. El resultado: muchos pasos en zigzag antes de llegar al centro.</p>
+    <p>Después del escalado, los contornos se vuelven circulares (o casi). El gradiente apunta directo al mínimo desde cualquier punto de partida.</p>
+
+    <pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+def costo(w1, w2, X1, X2, y):
+    """ECM para un modelo lineal con dos features."""
+    pred = w1 * X1 + w2 * X2
+    return ((y - pred) ** 2).mean()
+
+# Generamos datos con escalas muy diferentes
+np.random.seed(0)
+X1 = np.random.uniform(500, 5000, 100)   # metros cuadrados
+X2 = np.random.randint(1, 9, 100)        # habitaciones
+y  = 0.05 * X1 + 20 * X2 + np.random.randn(100) * 50
+
+# Versión escalada (z-score)
+X1_s = (X1 - X1.mean()) / X1.std()
+X2_s = (X2 - X2.mean()) / X2.std()
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+fig.suptitle("Contornos de la función de costo", fontsize=13, color="#e2e2e8")
+fig.patch.set_facecolor("#0f0f11")
+
+for ax, (xa, xb, title) in zip(axes, [
+    (X1, X2, "Sin escalar"),
+    (X1_s, X2_s, "Con escalado Z-score"),
+]):
+    # Grilla de parámetros
+    wa = np.linspace(-0.2, 0.2, 200) if "Sin" not in title else np.linspace(-0.2, 0.2, 200)
+    wb = np.linspace(-100, 100, 200) if "Sin" in title else np.linspace(-100, 100, 200)
+
+    if "Sin" in title:
+        wa = np.linspace(0.03, 0.07, 200)
+        wb = np.linspace(10, 30, 200)
+    else:
+        wa = np.linspace(-5, 5, 200)
+        wb = np.linspace(-5, 5, 200)
+
+    WA, WB = np.meshgrid(wa, wb)
+    Z = np.array([[costo(a, b, xa, xb, y) for a in wa] for b in wb])
+
+    ax.set_facecolor("#0f0f11")
+    ct = ax.contour(WA, WB, Z, levels=20, cmap="Blues")
+    ax.set_title(title, color="#e2e2e8", fontsize=11)
+    ax.tick_params(colors="#8a8a9a")
+    for spine in ax.spines.values():
+        spine.set_edgecolor("#2a2a30")
+    ax.set_xlabel("w₁", color="#8a8a9a")
+    ax.set_ylabel("w₂", color="#8a8a9a")
+
+plt.tight_layout()
+plt.show()</code></pre>
+
+    <div class="fig">
+      <img src="assets/feature-scaling/contornos.png" alt="Contornos de la función de costo: sin escalar vs con Z-score">
+      <div class="fig-caption">Izquierda: elipses alargadas cuando las features no están escaladas. Derecha: contornos casi circulares después del Z-score. El gradiente converge mucho más directo en el caso circular.</div>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Observar la diferencia de forma en los contornos</summary>
+      <div class="dbody">
+        <p>Al graficar los contornos verás que sin escalado la elipse es muy estrecha y alargada. Con escalado, se acerca a un círculo. Para cuantificarlo, compara el ratio entre el eje mayor y el eje menor de los contornos: un ratio cercano a 1 indica buena condición del problema.</p>
+        <p>En términos de álgebra lineal, este ratio está relacionado con el <strong>número de condición</strong> de la matriz de features \(X^T X\). Un número de condición alto (miles o millones) indica que el gradiente descendente va a sufrir.</p>
+      </div>
+    </details>
+
+    <!-- SECCIÓN 3 -->
+    <h2 id="metodos">Tres formas de escalar</h2>
+    <p>Existen varias técnicas de escalado. Todas comparten el objetivo: llevar las features a un rango más manejable. La elección depende del tipo de datos y del algoritmo.</p>
+
+    <h3 id="minmax">Escalado min-max</h3>
+    <p>El escalado <strong>min-max</strong> comprime cada variable al rango \([0, 1]\). Toma el valor mínimo como 0 y el máximo como 1; el resto se distribuye proporcionalmente.</p>
+
+    <div class="formula">
+      \[ x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}} \]
+    </div>
+
+    <p>Es simple e intuitivo, pero tiene un punto débil: es sensible a los valores atípicos. Si hay un outlier en 10 000 cuando el resto de valores está entre 500 y 2 000, ese outlier define el máximo y comprime al resto en una pequeña franja.</p>
+
+    <pre><code class="language-python">def escalar_minmax(x):
+    return (x - x.min()) / (x.max() - x.min())
+
+metros_mm = escalar_minmax(metros)
+
+print(f"antes — min: {metros.min():.0f}, max: {metros.max():.0f}")
+print(f"después — min: {metros_mm.min():.4f}, max: {metros_mm.max():.4f}")
+# antes — min: 506, max: 4994
+# después — min: 0.0000, max: 1.0000</code></pre>
+
+    <h3 id="media">Normalización por media</h3>
+    <p>La <strong>normalización por media</strong> centra los datos alrededor de cero usando la media, y divide por el rango. El resultado queda aproximadamente en el intervalo \([-0.5,\; 0.5]\).</p>
+
+    <div class="formula">
+      \[ x' = \frac{x - \mu}{x_{\max} - x_{\min}} \]
+    </div>
+
+    <p>A diferencia del escalado min-max, esta versión garantiza que la media de \(x'\) sea cero. Es útil cuando quieres que los valores positivos y negativos estén equilibrados, aunque el rango exacto puede variar.</p>
+
+    <pre><code class="language-python">def normalizar_media(x):
+    return (x - x.mean()) / (x.max() - x.min())
+
+metros_nm = normalizar_media(metros)
+
+print(f"media: {metros_nm.mean():.4f}")   # ≈ 0
+print(f"min:   {metros_nm.min():.4f}")    # ≈ -0.5
+print(f"max:   {metros_nm.max():.4f}")    # ≈ +0.5</code></pre>
+
+    <h3 id="zscore">Normalización Z-score</h3>
+    <p>La <strong>normalización Z-score</strong> (también llamada estandarización) transforma cada feature para que tenga <strong>media cero y desviación estándar uno</strong>. Es el método más robusto y el más utilizado en la práctica.</p>
+
+    <div class="formula">
+      \[ x' = \frac{x - \mu}{\sigma} \]
+    </div>
+
+    <p>Donde \(\mu\) es la media y \(\sigma\) es la desviación estándar. Después de esta transformación, el 68% de los valores cae entre \(-1\) y \(+1\), y el 95% entre \(-2\) y \(+2\). Los outliers siguen presentes pero su escala ya no domina el gradiente.</p>
+
+    <pre><code class="language-python">def zscore(x):
+    return (x - x.mean()) / x.std()
+
+metros_z  = zscore(metros)
+hab_z     = zscore(habitaciones)
+
+print(f"metros — media: {metros_z.mean():.4f}, std: {metros_z.std():.4f}")
+# metros — media: 0.0000, std: 1.0000
+
+print(f"hab    — media: {hab_z.mean():.4f}, std: {hab_z.std():.4f}")
+# hab    — media: 0.0000, std: 1.0000</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Comparar los tres métodos en una sola gráfica</summary>
+      <div class="dbody">
+        <p>Para ver el efecto visual de cada método, grafica los histogramas de la variable original y sus tres versiones escaladas:</p>
+        <pre><code class="language-python">fig, axes = plt.subplots(1, 4, figsize=(14, 4))
+fig.patch.set_facecolor("#0f0f11")
+
+datos = [
+    (metros,                     "Original"),
+    (escalar_minmax(metros),     "Min-Max"),
+    (normalizar_media(metros),   "Media"),
+    (zscore(metros),             "Z-score"),
+]
+
+for ax, (d, titulo) in zip(axes, datos):
+    ax.set_facecolor("#0f0f11")
+    ax.hist(d, bins=30, color="#6c7fea", alpha=0.75, edgecolor="#2a2a30")
+    ax.set_title(titulo, color="#e2e2e8", fontsize=10)
+    ax.tick_params(colors="#8a8a9a", labelsize=8)
+    for spine in ax.spines.values():
+        spine.set_edgecolor("#2a2a30")
+    ax.set_xlabel(f"μ={d.mean():.2f}  σ={d.std():.2f}", color="#8a8a9a", fontsize=8)
+
+plt.tight_layout()
+plt.show()</code></pre>
+        <div class="fig" style="margin-top:14px">
+          <img src="assets/feature-scaling/histogramas.png" alt="Histogramas comparando los cuatro métodos de escalado">
+          <div class="fig-caption">La forma de la distribución es idéntica en los cuatro casos. Solo cambian los valores en el eje x — las unidades, no la información.</div>
+        </div>
+        <p style="margin-top:12px">Nota que la <em>forma</em> del histograma no cambia — solo cambian los valores en el eje x. El escalado no altera la distribución, solo las unidades.</p>
+      </div>
+    </details>
+
+    <!-- SECCIÓN 4 -->
+    <h2 id="gradiente">Impacto en el gradiente descendente</h2>
+    <p>La forma más convincente de ver el beneficio del escalado es comparar la velocidad de convergencia del gradiente descendente con y sin escalado, usando el mismo learning rate.</p>
+
+    <pre><code class="language-python">def gradiente_paso(w, alpha, X, y):
+    """Actualización vectorial del gradiente para regresión lineal múltiple."""
+    n = len(y)
+    pred = X @ w
+    grad = (2 / n) * X.T @ (pred - y)
+    return w - alpha * grad
+
+def entrenar(X, y, alpha=0.01, n_iter=500):
+    w = np.zeros(X.shape[1])
+    historial = []
+    for _ in range(n_iter):
+        pred = X @ w
+        loss = ((y - pred) ** 2).mean()
+        historial.append(loss)
+        w = gradiente_paso(w, alpha, X, y)
+    return w, historial
+
+# Dataset
+np.random.seed(7)
+X1 = np.random.uniform(500, 5000, 150)
+X2 = np.random.randint(1, 9, 150).astype(float)
+y  = 0.05 * X1 + 20 * X2 + np.random.randn(150) * 80
+
+# Sin escalar (agregar columna de bias)
+X_raw  = np.column_stack([np.ones(len(y)), X1, X2])
+
+# Con Z-score
+X1_z = zscore(X1)
+X2_z = zscore(X2)
+X_sc = np.column_stack([np.ones(len(y)), X1_z, X2_z])
+
+_, hist_raw = entrenar(X_raw, y, alpha=1e-8, n_iter=500)
+_, hist_sc  = entrenar(X_sc,  y, alpha=0.1,  n_iter=500)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+fig.patch.set_facecolor("#0f0f11")
+ax.set_facecolor("#0f0f11")
+
+ax.plot(hist_raw, color="#ea6c6c", label="Sin escalar  (α=1e-8)")
+ax.plot(hist_sc,  color="#6c7fea", label="Con Z-score  (α=0.1)")
+ax.set_xlabel("Iteración", color="#8a8a9a")
+ax.set_ylabel("ECM", color="#8a8a9a")
+ax.set_title("Convergencia con y sin escalado", color="#e2e2e8")
+ax.legend(framealpha=0.2, labelcolor="#e2e2e8")
+ax.tick_params(colors="#8a8a9a")
+for spine in ax.spines.values():
+    spine.set_edgecolor("#2a2a30")
+
+plt.tight_layout()
+plt.show()</code></pre>
+
+    <div class="fig">
+      <img src="assets/feature-scaling/convergencia.png" alt="Comparación de convergencia del gradiente con y sin escalado">
+      <div class="fig-caption">Sin escalar (rojo): el learning rate debe ser 1×10⁻⁹ para no diverger y la curva baja lentamente. Con Z-score (azul): α = 0.15 es suficiente y el error cae en pocas iteraciones.</div>
+    </div>
+
+    <p>Observa dos cosas en la gráfica. Primero, sin escalado el learning rate tiene que ser minúsculo (\(10^{-8}\)) para evitar que el gradiente explote. Con escalado, puede ser varias órdenes de magnitud más grande (\(0.1\)). Segundo, la versión escalada converge mucho más rápido.</p>
+
+    <div class="def">
+      <div class="def-label">Regla práctica</div>
+      <p>Si el gradiente descendente no converge — o necesita un learning rate ridículamente pequeño — lo primero que debes revisar es si las features están escaladas.</p>
+    </div>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Por qué el learning rate puede ser mayor con features escaladas</summary>
+      <div class="dbody">
+        <p>La regla de actualización es \(w \leftarrow w - \alpha \nabla L\). El tamaño del gradiente \(\nabla L\) depende directamente de la escala de \(X\): si \(X\) tiene valores en los miles, los gradientes también van a ser grandes, y cualquier \(\alpha\) razonable produce pasos demasiado grandes.</p>
+        <p>Después del escalado, los valores de \(X\) son del orden de 1, los gradientes son del orden de 1, y el aprendizaje estable sucede con \(\alpha\) en el rango \(0.01 – 1\). Esto también hace que la búsqueda del hiperparámetro \(\alpha\) sea mucho más predecible.</p>
+      </div>
+    </details>
+
+    <!-- SECCIÓN 5 -->
+    <h2 id="practica">Qué escalar, qué no, y cómo hacerlo bien</h2>
+
+    <h3>Qué variables escalar</h3>
+    <p>En general, escala las variables numéricas continuas que forman parte de las features de tu modelo. No es necesario escalar:</p>
+    <ul>
+      <li>Variables binarias (0/1) y variables one-hot encoded — ya están en rango \([0, 1]\)</li>
+      <li>La variable objetivo \(y\) en regresión, en la mayoría de los casos — escalarla complica la interpretación de los coeficientes</li>
+    </ul>
+
+    <h3>La regla de oro: ajustar en entrenamiento, aplicar en todos</h3>
+    <p>Esto es el error más común al escalar: calcular la media y la desviación estándar <strong>usando todo el dataset</strong>, incluyendo el conjunto de prueba. Eso es una forma de fuga de información (<em>data leakage</em>).</p>
+    <p>La forma correcta:</p>
+    <ol>
+      <li>Divide tus datos en entrenamiento y prueba <strong>primero</strong></li>
+      <li>Calcula \(\mu\) y \(\sigma\) <strong>solo con los datos de entrenamiento</strong></li>
+      <li>Aplica esos mismos valores (los del entrenamiento) para transformar también el conjunto de prueba</li>
+    </ol>
+
+    <pre><code class="language-python">from sklearn.model_selection import train_test_split
+
+# 1. Construir el dataset completo
+X = np.column_stack([X1, X2])
+
+# 2. Dividir ANTES de escalar
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Calcular estadísticas SOLO sobre entrenamiento
+mu_train    = X_train.mean(axis=0)
+sigma_train = X_train.std(axis=0)
+
+# 4. Transformar ambos conjuntos con los mismos parámetros
+X_train_sc = (X_train - mu_train) / sigma_train
+X_test_sc  = (X_test  - mu_train) / sigma_train   # <-- usa mu y sigma de TRAIN
+
+print("Train — media:", X_train_sc.mean(axis=0).round(4))
+# Train — media: [0. 0.]
+print("Test  — media:", X_test_sc.mean(axis=0).round(4))
+# Test  — media: [-0.023  0.041]   (no exactamente 0, y eso está bien)</code></pre>
+
+    <p>El conjunto de prueba no tendrá media exactamente cero — eso es esperable. Lo que importa es que las estadísticas usadas para transformar sean las del entrenamiento, para simular fielmente cómo el modelo verá datos nuevos en producción.</p>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Usando sklearn StandardScaler</summary>
+      <div class="dbody">
+        <p>En la práctica, sklearn provee <code>StandardScaler</code> que implementa exactamente este flujo con una API más limpia:</p>
+        <pre><code class="language-python">from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+# Z-score
+scaler = StandardScaler()
+X_train_sc = scaler.fit_transform(X_train)   # ajusta y transforma
+X_test_sc  = scaler.transform(X_test)        # solo transforma (usa parámetros de fit)
+
+# Min-max
+scaler_mm = MinMaxScaler()
+X_train_mm = scaler_mm.fit_transform(X_train)
+X_test_mm  = scaler_mm.transform(X_test)
+
+# Los parámetros aprendidos quedan guardados en el objeto
+print("Media aprendida:", scaler.mean_)
+print("Std aprendida: ", scaler.scale_)</code></pre>
+        <p>Al encapsular el escalado en un objeto de sklearn, puedes guardarlo junto al modelo para garantizar que las mismas transformaciones se apliquen cuando lleguen datos nuevos.</p>
+      </div>
+    </details>
+
+    <h3>¿Cuándo NO es necesario escalar?</h3>
+    <p>Los árboles de decisión y sus variantes (Random Forest, XGBoost) <strong>no requieren escalado</strong>: toman decisiones basadas en umbrales, no en distancias ni gradientes. Si solo usas esos algoritmos, puedes omitir este paso.</p>
+    <p>En cambio, los algoritmos que sí dependen del escalado incluyen: regresión lineal con gradiente descendente, regresión logística, SVM, redes neuronales y K-Nearest Neighbors.</p>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc-sidebar a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc-sidebar a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>

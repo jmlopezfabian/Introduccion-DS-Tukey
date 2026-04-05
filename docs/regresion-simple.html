@@ -56,6 +56,9 @@
   .dbody{padding:16px 18px;border-top:1px solid var(--border)}
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -160,6 +163,11 @@ for m in pendientes:
 pendiente_optima = pendientes[errores.index(min(errores))]
 print(f"Mejor pendiente encontrada: {pendiente_optima}")</code></pre>
 
+    <div class="fig">
+      <img src="assets/regresion-simple/ecm-pendiente.png" alt="Función de costo ECM en función de la pendiente m, con la pendiente óptima marcada">
+      <div class="fig-caption">ECM para distintos valores de \(m\) (con \(b\) fijo). La curva tiene un único mínimo — la línea roja marca la pendiente óptima encontrada. Esta forma convexa garantiza que el gradiente descendente siempre converge.</div>
+    </div>
+
     <details class="ex">
       <summary><span class="tag">Ejemplo</span> Búsqueda en dos dimensiones (m y b)</summary>
       <div class="dbody">
@@ -238,6 +246,11 @@ ax.set_xlabel("Horas de estudio")
 ax.set_ylabel("Calificación")
 ax.legend()
 plt.show()</code></pre>
+
+    <div class="fig">
+      <img src="assets/regresion-simple/scatter-regresion.png" alt="Scatter plot con la recta de regresión ajustada por mínimos cuadrados">
+      <div class="fig-caption">Datos reales (puntos) y recta de regresión ajustada (línea roja) mediante la fórmula cerrada de mínimos cuadrados. La pendiente y el intercepto en la leyenda son los valores exactos calculados analíticamente.</div>
+    </div>
 
     <h2 id="metricas">Métricas de evaluación</h2>
     <p>Además del ECM, se usan otras métricas para evaluar la calidad del modelo:</p>

@@ -57,6 +57,9 @@
   .dbody{padding:16px 18px;border-top:1px solid var(--border)}
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -145,6 +148,11 @@ categoricas = ["gender", "course", "internet_access",
 df["study_method"].unique()
 df["gender"].value_counts()</code></pre>
 
+    <div class="fig">
+      <img src="assets/eda/barras-genero.png" alt="Gráfica de barras con la cantidad de estudiantes por género">
+      <div class="fig-caption">Distribución de estudiantes por género. Las tres categorías tienen frecuencias muy similares, lo que indica un dataset balanceado en esta variable.</div>
+    </div>
+
     <h2 id="filtros">Filtros booleanos</h2>
     <p>Para analizar subconjuntos de los datos, se crean <strong>máscaras booleanas</strong>: condiciones que devuelven <code>True</code> o <code>False</code> para cada fila.</p>
     <pre><code class="language-python"># Filtrar un solo género
@@ -160,6 +168,21 @@ scores_mujeres = df[df["gender"] == "female"]["exam_score"]
 scores_hombres = df[df["gender"] == "male"]["exam_score"]
 
 print(scores_mujeres.mean(), scores_hombres.mean())</code></pre>
+
+    <div class="fig">
+      <img src="assets/eda/scatter-horas-calificacion.png" alt="Scatter plot de horas de estudio vs calificación del examen">
+      <div class="fig-caption">Relación entre horas de estudio y calificación del examen (muestra de 500 estudiantes). La tendencia positiva es clara: más horas de estudio se asocian con mejores calificaciones.</div>
+    </div>
+
+    <div class="fig">
+      <img src="assets/eda/boxplot-genero.png" alt="Boxplot comparando la distribución de calificaciones por género">
+      <div class="fig-caption">Distribución de calificaciones por género. Las medianas son similares entre los tres grupos, lo que sugiere que el género no es un predictor importante de la calificación.</div>
+    </div>
+
+    <div class="fig">
+      <img src="assets/eda/histograma-calificaciones.png" alt="Histogramas superpuestos de calificaciones por género">
+      <div class="fig-caption">Histogramas superpuestos: la distribución de calificaciones tiene una forma similar para los tres géneros, con la mayor parte de los datos concentrada entre 40 y 90 puntos.</div>
+    </div>
 
     <div class="def">
       <div class="def-label">Importante</div>
@@ -229,6 +252,11 @@ sns.heatmap(matriz, annot=True, fmt=".2f",
             cmap="coolwarm", vmin=-1, vmax=1)
 plt.title("Matriz de correlación de Pearson")
 plt.show()</code></pre>
+
+    <div class="fig">
+      <img src="assets/eda/heatmap-correlacion.png" alt="Heatmap de la matriz de correlación de variables numéricas">
+      <div class="fig-caption">Matriz de correlación de las variables numéricas. <code>study_hours</code> tiene la correlación más alta con <code>exam_score</code>. Las demás variables muestran correlaciones bajas, lo que sugiere que el tiempo de estudio es el predictor dominante.</div>
+    </div>
 
     <div class="def">
       <div class="def-label">Limitación importante</div>
