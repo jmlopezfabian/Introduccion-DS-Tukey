@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problemas en Regresión Lineal — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  .nb-ref{display:flex;align-items:center;gap:10px;margin-bottom:40px;font-size:.85rem}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);background:var(--bg-alt);border:1px solid var(--border);padding:3px 8px;border-radius:4px}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.85rem}
+  th{background:var(--bg-alt);color:var(--text);font-weight:600;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border)}
+  td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="../index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Problemas en Regresión Lineal</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#no-linealidad">No-linealidad</a>
+        <ol>
+          <li><a href="#residuos-vs-ajustados">Residuos vs ajustados</a></li>
+        </ol>
+      </li>
+      <li><a href="#correlacion">Correlación de errores</a></li>
+      <li><a href="#heteroced">Heterocedasticidad</a>
+        <ol>
+          <li><a href="#transformacion">Transformación logarítmica</a></li>
+        </ol>
+      </li>
+      <li><a href="#outliers">Outliers</a>
+        <ol>
+          <li><a href="#resid-estudentizados">Residuos estudentizados</a></li>
+        </ol>
+      </li>
+      <li><a href="#leverage">Alto leverage</a>
+        <ol>
+          <li><a href="#estadistico-hat">Estadístico hat</a></li>
+        </ol>
+      </li>
+      <li><a href="#colinealidad">Colinealidad</a>
+        <ol>
+          <li><a href="#vif">VIF</a></li>
+        </ol>
+      </li>
+      <li><a href="#resumen">Resumen diagnóstico</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">10 — problemas-regresion</div>
+      <h1>Problemas Potenciales en Regresión Lineal</h1>
+      <p class="lead">Ajustar un modelo OLS no garantiza que sea válido. Antes de interpretar coeficientes o hacer predicciones, hay que verificar que los datos no violen los supuestos del modelo. Este módulo cubre los seis problemas clásicos y las herramientas diagnósticas para detectarlos.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="https://github.com/jmlopezfabian/Introduccion-DS-Tukey/blob/main/notebooks/problemas_regresion.ipynb" target="_blank">notebooks/problemas_regresion.ipynb</a>
+    </div>
+
+    <!-- INTRODUCCIÓN -->
+    <h2 id="intro">Introducción</h2>
+    <p>En el módulo 06 vimos cómo usar statsmodels para ajustar un modelo OLS e interpretar su summary. Pero ese ajuste descansa sobre cuatro supuestos que el modelo no verifica por sí solo: la relación entre predictores y respuesta debe ser <strong>lineal</strong>, los errores deben ser <strong>independientes</strong>, su varianza debe ser <strong>constante</strong> (homocedasticidad), y deben seguir una distribución <strong>aproximadamente normal</strong>.</p>
+    <p>Cuando alguno de estos supuestos falla, los coeficientes y sus p-valores dejan de ser confiables. Este módulo presenta los seis problemas más comunes y las gráficas y estadísticos que permiten detectarlos antes de usar el modelo.</p>
+
+    <div class="def">
+      <div class="def-label">Los cuatro supuestos de OLS</div>
+      <p><strong>Linealidad:</strong> \( E[y \mid x] = \beta_0 + \beta_1 x \). La relación es lineal en los parámetros.<br>
+      <strong>Independencia:</strong> Los errores \( \varepsilon_i \) no están correlacionados entre sí.<br>
+      <strong>Homocedasticidad:</strong> \( \text{Var}(\varepsilon_i) = \sigma^2 \) es constante para toda observación.<br>
+      <strong>Normalidad:</strong> Los errores siguen una distribución normal (necesario para inferencia exacta).</p>
+    </div>
+
+    <!-- 1. NO-LINEALIDAD -->
+    <h2 id="no-linealidad">1. No-linealidad de la relación</h2>
+    <p>Imagina intentar medir la distancia de una carretera curva con una regla recta: en cada curva subestimarás la distancia real. Lo mismo pasa cuando ajustas una recta sobre datos que siguen una curva — el modelo sistemáticamente se equivoca en los extremos y acierta solo en el centro.</p>
+    <p>El problema no siempre es visible en la gráfica original de datos. La herramienta más directa para detectarlo es la <strong>gráfica de residuos vs valores ajustados</strong>.</p>
+
+    <h3 id="residuos-vs-ajustados">Gráfica de residuos vs valores ajustados</h3>
+    <p>Si la relación es lineal, los residuos deben dispersarse aleatoriamente alrededor de cero sin ningún patrón. Si ves una curva en arco o en U, el modelo no está capturando toda la señal.</p>
+
+    <pre><code class="language-python">import numpy as np
+import statsmodels.api as sm
+
+# Ajuste lineal simple
+X = sm.add_constant(study_hours)
+modelo_lineal = sm.OLS(exam_score, X).fit()
+
+# Ajuste cuadrático (agrega x²)
+X_poly = sm.add_constant(np.column_stack([study_hours, study_hours**2]))
+modelo_poly = sm.OLS(exam_score, X_poly).fit()
+
+print(f"R² lineal:      {modelo_lineal.rsquared:.3f}")
+print(f"R² cuadrático: {modelo_poly.rsquared:.3f}")</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/residuos-nolinealidad.png" alt="Residuos vs ajustados: patrón en arco (modelo lineal) vs scatter plano (modelo cuadrático)">
+      <div class="fig-caption">Izquierda: los residuos del modelo lineal forman un arco — señal de curvatura no capturada. Derecha: al agregar un término cuadrático, los residuos se dispersan sin patrón.</div>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Qué hacer</div>
+      <p>Si ves un patrón en la gráfica de residuos vs ajustados, agrega términos polinómicos (\( x^2, x^3 \)) o transforma la variable predictora (por ejemplo, \( \sqrt{x} \) o \( \ln(x) \)).</p>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Detectar y corregir no-linealidad en el dataset del curso</summary>
+      <div class="dbody">
+        <p>Ajustamos un modelo lineal y uno cuadrático sobre los mismos datos y comparamos el R² y la gráfica de residuos:</p>
+        <pre><code class="language-python">import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(200, random_state=42)
+x = df["study_hours"]
+y = df["exam_score"]
+
+# Modelo lineal
+X1 = sm.add_constant(x)
+m1 = sm.OLS(y, X1).fit()
+
+# Modelo cuadrático
+X2 = sm.add_constant(np.column_stack([x, x**2]))
+m2 = sm.OLS(y, X2).fit()
+
+print(f"R² lineal:      {m1.rsquared:.3f}")
+print(f"R² cuadrático:  {m2.rsquared:.3f}")
+
+# La gráfica de residuos del modelo lineal mostrará arco si hay curvatura.
+# Si el R² cuadrático mejora notablemente (p.ej. de 0.45 a 0.68),
+# la curva aporta señal real, no solo ruido.</code></pre>
+        <p>Si los residuos del modelo cuadrático se dispersan sin patrón alrededor de cero, la curvatura quedó capturada. Un salto grande de R² confirma que el modelo lineal era insuficiente.</p>
+      </div>
+    </details>
+
+    <!-- 2. CORRELACIÓN DE ERRORES -->
+    <h2 id="correlacion">2. Correlación de errores</h2>
+    <p>Imagina registrar la temperatura diaria durante un mes. La temperatura de hoy te dice algo sobre la de mañana — los errores del modelo no son independientes, están correlacionados en el tiempo. Esto ocurre principalmente en <strong>series de tiempo</strong>, datos con estructura espacial o mediciones repetidas sobre los mismos sujetos.</p>
+    <p>Cuando los errores están correlacionados, los errores estándar del modelo se subestiman. Los p-valores parecen más significativos de lo que realmente son, y los intervalos de confianza son más estrechos de lo correcto.</p>
+
+    <p>El <strong>estadístico Durbin-Watson</strong> mide si los residuos consecutivos están correlacionados:</p>
+
+    <pre><code class="language-python">from statsmodels.stats.stattools import durbin_watson
+
+# Ordenar datos por una variable temporal o de orden natural
+df_sorted = df.sort_values("class_attendance").reset_index(drop=True)
+X_s = sm.add_constant(df_sorted["study_hours"])
+modelo_s = sm.OLS(df_sorted["exam_score"], X_s).fit()
+
+dw = durbin_watson(modelo_s.resid)
+print(f"Durbin-Watson: {dw:.3f}")
+# 2.0 → sin correlación | &lt;1.5 o &gt;2.5 → alerta</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/correlacion-errores.png" alt="Residuos en orden de observación: con autocorrelación (izquierda) y sin ella (derecha)">
+      <div class="fig-caption">Izquierda: los residuos forman una tendencia visible — están autocorrelacionados (DW alejado de 2). Derecha: residuos independientes dispersados aleatoriamente alrededor de cero.</div>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Interpretación del estadístico Durbin-Watson</div>
+      <p>DW varía entre 0 y 4. <strong>DW ≈ 2</strong> indica ausencia de autocorrelación. <strong>DW &lt; 1.5</strong> sugiere autocorrelación positiva (residuos consecutivos del mismo signo). <strong>DW &gt; 2.5</strong> sugiere autocorrelación negativa.</p>
+    </div>
+
+    <div class="def">
+      <div class="def-label">Cómo corregirlo</div>
+      <p><strong>Agregar el tiempo como predictor:</strong> incluir un índice de orden temporal \( t \) en el modelo suele absorber parte de la autocorrelación.<br>
+      <strong>Incluir rezagos:</strong> agregar la versión retrasada de la respuesta (\( y_{t-1} \)) como predictor captura la dependencia directa entre observaciones consecutivas.<br>
+      <strong>Modelos de series de tiempo:</strong> si la autocorrelación es estructural, usar ARIMA o modelos de efectos mixtos es la solución de fondo.</p>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Corregir autocorrelación incluyendo el orden temporal</summary>
+      <div class="dbody">
+        <p>Comparamos el estadístico DW antes y después de incluir un índice temporal como predictor adicional:</p>
+        <pre><code class="language-python">import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.stats.stattools import durbin_watson
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(200, random_state=42)
+df_sorted = df.sort_values("class_attendance").reset_index(drop=True)
+df_sorted["t"] = np.arange(len(df_sorted))   # índice temporal
+
+# Modelo sin tiempo
+X_base = sm.add_constant(df_sorted["study_hours"])
+m_base = sm.OLS(df_sorted["exam_score"], X_base).fit()
+dw_base = durbin_watson(m_base.resid)
+
+# Modelo con tiempo como predictor adicional
+X_t = sm.add_constant(df_sorted[["study_hours", "t"]])
+m_t = sm.OLS(df_sorted["exam_score"], X_t).fit()
+dw_t = durbin_watson(m_t.resid)
+
+print(f"DW sin tiempo: {dw_base:.3f}")
+print(f"DW con tiempo: {dw_t:.3f}")
+# Si DW se acerca más a 2 al incluir el tiempo, la autocorrelación
+# era en gran parte tendencia temporal capturada por ese predictor.</code></pre>
+      </div>
+    </details>
+
+    <!-- 3. HETEROCEDASTICIDAD -->
+    <h2 id="heteroced">3. Heterocedasticidad</h2>
+    <p>Piensa en estimar cuánto tardarás en llegar al trabajo: si el tren está a 2 minutos, puedes predecirlo con mucha precisión. Si está a 2 horas, la incertidumbre es mucho mayor. Esa variabilidad que crece con el valor predicho es exactamente la <strong>heterocedasticidad</strong>: la varianza de los residuos no es constante.</p>
+    <p>En la gráfica de residuos vs valores ajustados, la heterocedasticidad aparece como un <strong>patrón de embudo</strong> — los residuos se ensanchan (o se estrechan) a medida que \( \hat{y} \) crece.</p>
+
+    <p>Además de la gráfica, el <strong>test de Breusch-Pagan</strong> contrasta formalmente si la varianza de los residuos depende de los predictores:</p>
+
+    <pre><code class="language-python">from statsmodels.stats.diagnostic import het_breuschpagan
+
+modelo = sm.OLS(exam_score, sm.add_constant(study_hours)).fit()
+lm, lm_pval, fstat, f_pval = het_breuschpagan(modelo.resid, modelo.model.exog)
+
+print(f"Estadístico LM: {lm:.3f}")
+print(f"p-valor:        {lm_pval:.4f}")
+# p < 0.05 → evidencia de heterocedasticidad</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/heterocedasticidad.png" alt="Heterocedasticidad: embudo en residuos vs ajustados (izquierda) y residuos homoscedásticos tras transformación log (derecha)">
+      <div class="fig-caption">Izquierda: forma de embudo — la varianza de los residuos crece con los valores ajustados. Derecha: tras aplicar transformación logarítmica a <em>y</em>, la varianza se estabiliza.</div>
+    </div>
+
+    <h3 id="transformacion">Transformación logarítmica</h3>
+    <p>Cuando la variable respuesta es siempre positiva y su varianza crece con su magnitud, la transformación logarítmica suele corregir el problema. El modelo se ajusta sobre \( \ln(y) \) en lugar de \( y \):</p>
+
+    <div class="formula">
+      \[ \ln(\hat{y}) = \beta_0 + \beta_1 x \]
+    </div>
+
+    <pre><code class="language-python">import numpy as np
+
+# Transformar la variable respuesta
+y_log = np.log1p(exam_score)   # log(1 + y) para evitar log(0)
+
+modelo_log = sm.OLS(y_log, sm.add_constant(study_hours)).fit()
+print(f"R² con log(y): {modelo_log.rsquared:.3f}")
+
+# Los coeficientes ahora se interpretan como cambios porcentuales
+b1 = modelo_log.params["study_hours"]
+print(f"Un hora más de estudio → {b1*100:.1f}% de cambio en la calificación")</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Otras transformaciones para heterocedasticidad</summary>
+      <div class="dbody">
+        <p>La transformación logarítmica es la más común, pero existen otras alternativas según la forma del patrón:</p>
+        <ul>
+          <li><strong>Raíz cuadrada \( \sqrt{y} \):</strong> cuando la varianza crece moderadamente con la media. Útil para conteos.</li>
+          <li><strong>Inversa \( 1/y \):</strong> cuando la varianza crece muy rápido con la media.</li>
+          <li><strong>Box-Cox:</strong> familia paramétrica que incluye log y raíz como casos especiales. <code>scipy.stats.boxcox</code> estima el parámetro \( \lambda \) óptimo automáticamente.</li>
+          <li><strong>WLS (mínimos cuadrados ponderados):</strong> en lugar de transformar \( y \), asigna pesos inversamente proporcionales a la varianza estimada. Disponible en <code>sm.WLS</code>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Detectar y corregir heterocedasticidad en el dataset del curso</summary>
+      <div class="dbody">
+        <p>Aplicamos el test Breusch-Pagan antes y después de transformar la respuesta con logaritmo:</p>
+        <pre><code class="language-python">import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.stats.diagnostic import het_breuschpagan
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(200, random_state=42)
+X = sm.add_constant(df["study_hours"])
+y = df["exam_score"]
+
+# Modelo original
+modelo = sm.OLS(y, X).fit()
+_, pval, _, _ = het_breuschpagan(modelo.resid, modelo.model.exog)
+print(f"Breusch-Pagan p-valor (original): {pval:.4f}")
+
+# Con transformación logarítmica
+y_log = np.log1p(y)
+modelo_log = sm.OLS(y_log, X).fit()
+_, pval_log, _, _ = het_breuschpagan(modelo_log.resid, modelo_log.model.exog)
+print(f"Breusch-Pagan p-valor (log y):    {pval_log:.4f}")
+# Si p sube sobre 0.05 después del log, la transformación estabilizó la varianza.</code></pre>
+        <p>Un p-valor mayor a 0.05 tras la transformación indica que ya no hay evidencia estadística de heterocedasticidad.</p>
+      </div>
+    </details>
+
+    <!-- 4. OUTLIERS -->
+    <h2 id="outliers">4. Outliers</h2>
+    <p>Un outlier es una observación cuya respuesta \( y_i \) es inusualmente grande o pequeña dado su valor de \( x \). Como un testigo deshonesto en un juicio: una sola declaración falsa puede torcer todo el veredicto. En regresión, un outlier puede desplazar significativamente la recta ajustada y distorsionar los coeficientes.</p>
+
+    <pre><code class="language-python"># Comparar coeficientes con y sin outliers
+y_limpio = exam_score.copy()
+y_mod    = exam_score.copy()
+y_mod[0]  = exam_score.mean() + 4 * exam_score.std()   # outlier alto
+y_mod[10] = exam_score.mean() - 4 * exam_score.std()   # outlier bajo
+
+m_limpio = sm.OLS(y_limpio, sm.add_constant(study_hours)).fit()
+m_out    = sm.OLS(y_mod,    sm.add_constant(study_hours)).fit()
+
+print(f"Pendiente sin outliers: {m_limpio.params[1]:.3f}")
+print(f"Pendiente con outliers: {m_out.params[1]:.3f}")</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/outliers.png" alt="Efecto de outliers en la recta de regresión y residuos estudentizados">
+      <div class="fig-caption">Izquierda: dos outliers (estrellas rojas) desplazan la recta de regresión notablemente. Derecha: los residuos estudentizados de esos puntos superan el umbral ±3.</div>
+    </div>
+
+    <h3 id="resid-estudentizados">Residuos estudentizados</h3>
+    <p>El residuo ordinario \( e_i = y_i - \hat{y}_i \) no tiene escala fija, lo que dificulta comparar observaciones. Los <strong>residuos estudentizados</strong> normalizan cada residuo por su error estándar, teniendo en cuenta también el leverage de la observación:</p>
+
+    <div class="formula">
+      \[ r_i = \frac{e_i}{s\,\sqrt{1 - h_{ii}}} \]
+    </div>
+
+    <p>donde \( s \) es la desviación estándar de los residuos y \( h_{ii} \) es el leverage de la observación (definido en la sección siguiente). Una observación con \( |r_i| > 3 \) es candidata a outlier.</p>
+
+    <pre><code class="language-python">from statsmodels.stats.outliers_influence import OLSInfluence
+
+modelo = sm.OLS(exam_score, sm.add_constant(study_hours)).fit()
+influencia = OLSInfluence(modelo)
+r_stud = influencia.resid_studentized_external
+
+outliers = np.where(np.abs(r_stud) > 3)[0]
+print(f"Observaciones con |r_i| > 3: {len(outliers)}")
+print("Índices:", outliers)</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Detectar outliers en el dataset del curso</summary>
+      <div class="dbody">
+        <pre><code class="language-python">import pandas as pd
+import statsmodels.api as sm
+import numpy as np
+from statsmodels.stats.outliers_influence import OLSInfluence
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(200, random_state=42)
+X = sm.add_constant(df["study_hours"])
+y = df["exam_score"]
+
+modelo = sm.OLS(y, X).fit()
+r_stud = OLSInfluence(modelo).resid_studentized_external
+
+print(f"Total de observaciones: {len(y)}")
+print(f"Outliers (|r_i| > 3):   {(np.abs(r_stud) > 3).sum()}")
+print(f"Outliers (|r_i| > 2):   {(np.abs(r_stud) > 2).sum()}")
+# Con datos reales, es normal tener algunos puntos con |r_i| > 2</code></pre>
+      </div>
+    </details>
+
+    <div class="def">
+      <div class="def-label">Qué hacer con un outlier detectado</div>
+      <p><strong>Investigar primero:</strong> verificar si es un error de captura o una observación legítima.<br>
+      <strong>Error de datos:</strong> corregir o eliminar el registro con documentación del motivo.<br>
+      <strong>Observación real:</strong> mantenerla y reportarla. Considera usar <strong>regresión robusta</strong> (<code>sm.RLM</code>), que reduce automáticamente el peso de puntos extremos sin eliminarlos.<br>
+      No eliminar outliers solo porque son inconvenientes: a veces representan el fenómeno más interesante del conjunto.</p>
+    </div>
+
+    <!-- 5. ALTO LEVERAGE -->
+    <h2 id="leverage">5. Puntos de alto leverage</h2>
+    <p>Imagina un balancín: aunque alguien en el centro no afecte mucho el equilibrio, una persona en el extremo tiene un poder desproporcionado sobre el balance, aunque no sea muy pesada. Un punto de alto leverage tiene un valor de \( x \) muy inusual — lejos de la media de los predictores — y por eso tiene una influencia desproporcionada en la posición de la recta.</p>
+    <p>Es importante distinguir los dos conceptos: un <strong>outlier</strong> tiene una \( y \) inusual dado su \( x \). Un punto de <strong>alto leverage</strong> tiene una \( x \) inusual. Un punto puede ser ambas cosas a la vez, y en ese caso su impacto es máximo.</p>
+
+    <p>Para la regresión simple, el leverage de la observación \( i \) es:</p>
+
+    <div class="formula">
+      \[ h_{ii} = \frac{1}{n} + \frac{(x_i - \bar{x})^2}{\displaystyle\sum_{j=1}^{n}(x_j - \bar{x})^2} \]
+    </div>
+
+    <p>El promedio de todos los \( h_{ii} \) es siempre \( (p+1)/n \), donde \( p \) es el número de predictores. Una regla práctica marca como "alto leverage" a cualquier observación con \( h_{ii} > 2(p+1)/n \).</p>
+
+    <h3 id="estadistico-hat">La matriz hat y el estadístico de leverage</h3>
+
+    <pre><code class="language-python">from statsmodels.stats.outliers_influence import OLSInfluence
+
+modelo = sm.OLS(exam_score, sm.add_constant(study_hours)).fit()
+influencia = OLSInfluence(modelo)
+h = influencia.hat_matrix_diag
+
+p = 1            # número de predictores
+n = len(exam_score)
+umbral = 2 * (p + 1) / n
+
+alto_leverage = h > umbral
+print(f"Umbral de leverage: {umbral:.3f}")
+print(f"Puntos con alto leverage: {alto_leverage.sum()}")</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/leverage.png" alt="Puntos de alto leverage en el scatter (izquierda) e índice de valores h_ii con umbral (derecha)">
+      <div class="fig-caption">Izquierda: los puntos rojos tienen valores de <em>x</em> inusuales (lejos de la media) y por eso ejercen mayor influencia sobre la recta. Derecha: el estadístico h_ii para cada observación — los puntos sobre la línea punteada superan el umbral.</div>
+    </div>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Distancia de Cook: outlier y leverage juntos</summary>
+      <div class="dbody">
+        <p>La <strong>distancia de Cook</strong> combina en un solo número el efecto de outlier y el de leverage. Mide cuánto cambiarían todos los coeficientes si se eliminara la observación \( i \). Un valor de Cook \( D_i > 1 \) es motivo de revisión.</p>
+        <pre><code class="language-python">cook_d, p_vals = OLSInfluence(modelo).cooks_distance
+obs_influyentes = np.where(cook_d > 1)[0]
+print(f"Observaciones con Cook D > 1: {len(obs_influyentes)}")</code></pre>
+      </div>
+    </details>
+
+    <div class="def">
+      <div class="def-label">Qué hacer con puntos de alto leverage</div>
+      <p><strong>Revisar el dato:</strong> confirmar que el valor inusual de \( x \) es real y no un error de registro.<br>
+      <strong>Combinar con Cook:</strong> un punto de alto leverage solo es preocupante si también tiene residuo grande. La distancia de Cook \( D_i \) combina ambos efectos — prioriza los puntos con \( D_i > 1 \).<br>
+      <strong>Regresión robusta:</strong> <code>sm.RLM</code> reduce automáticamente el peso de puntos influyentes sin eliminarlos. Si la pendiente cambia mucho entre OLS y RLM, los puntos de alto leverage están distorsionando el modelo.</p>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Identificar puntos influyentes y comparar con regresión robusta</summary>
+      <div class="dbody">
+        <p>Detectamos puntos con alto leverage y distancia de Cook elevada, luego comparamos OLS contra RLM para ver si están distorsionando los coeficientes:</p>
+        <pre><code class="language-python">import pandas as pd
+import statsmodels.api as sm
+import numpy as np
+from statsmodels.stats.outliers_influence import OLSInfluence
+
+df = pd.read_csv("data/csvs/examenes.csv").sample(200, random_state=42)
+X = sm.add_constant(df["study_hours"])
+y = df["exam_score"]
+
+modelo = sm.OLS(y, X).fit()
+infl = OLSInfluence(modelo)
+h = infl.hat_matrix_diag
+cook_d, _ = infl.cooks_distance
+
+p, n = 1, len(y)
+umbral_h = 2 * (p + 1) / n
+
+print(f"Puntos con alto leverage (h > {umbral_h:.3f}): {(h > umbral_h).sum()}")
+print(f"De esos, con Cook D > 0.5:                     {((h > umbral_h) & (cook_d > 0.5)).sum()}")
+
+# Comparar OLS vs regresión robusta (RLM)
+modelo_robusto = sm.RLM(y, X).fit()
+print(f"\nPendiente OLS:     {modelo.params['study_hours']:.3f}")
+print(f"Pendiente robusta: {modelo_robusto.params['study_hours']:.3f}")
+# Una diferencia grande indica que puntos influyentes están sesgando OLS.</code></pre>
+      </div>
+    </details>
+
+    <!-- 6. COLINEALIDAD -->
+    <h2 id="colinealidad">6. Colinealidad</h2>
+    <p>Imagina intentar estimar por separado el peso de dos personas que siempre viajan juntas: nunca las ves una sin la otra, así que es imposible saber cuánto pesa cada una individualmente. Lo mismo pasa cuando dos predictores están altamente correlacionados — el modelo no puede separar el efecto de cada uno.</p>
+    <p>La <strong>colinealidad</strong> no sesga las predicciones del modelo, pero sí infla los errores estándar de los coeficientes. Esto hace que los intervalos de confianza sean muy anchos y que los p-valores sean poco confiables: un predictor importante puede aparecer como "no significativo" simplemente porque comparte información con otro.</p>
+
+    <pre><code class="language-python">import statsmodels.api as sm
+
+# Modelo con predictores correlacionados
+X_multi = sm.add_constant(df[["study_hours", "class_attendance", "sleep_hours"]])
+modelo_multi = sm.OLS(df["exam_score"], X_multi).fit()
+print(modelo_multi.summary())
+# Observar: errores estándar grandes → t-estadísticos pequeños → p-valores altos</code></pre>
+
+    <div class="fig">
+      <img src="assets/problemas-regresion/colinealidad.png" alt="Correlación entre predictores (izquierda) y VIF de cada predictor (derecha)">
+      <div class="fig-caption">Izquierda: horas de estudio y asistencia a clase están correlacionadas — al incluir ambas en el modelo, sus efectos son difíciles de separar. Derecha: el VIF cuantifica cuánto se infla la varianza de cada coeficiente por la correlación con los demás predictores.</div>
+    </div>
+
+    <div class="formula">
+      \[ \text{VIF}_j = \frac{1}{1 - R_j^2} \]
+    </div>
+
+    <p>donde \( R_j^2 \) es el coeficiente de determinación de la regresión del predictor \( j \) sobre todos los demás predictores. Si \( R_j^2 \) es alto (el predictor \( j \) se puede predecir bien con los otros), el VIF es grande.</p>
+
+    <h3 id="vif">Factor de Inflación de Varianza (VIF)</h3>
+
+    <div class="def">
+      <div class="def-label">Interpretación del VIF</div>
+      <p><strong>VIF &lt; 5:</strong> colinealidad aceptable, sin preocupación.<br>
+      <strong>VIF 5–10:</strong> colinealidad moderada — revisar el modelo.<br>
+      <strong>VIF &gt; 10:</strong> colinealidad severa — es necesario actuar.</p>
+    </div>
+
+    <pre><code class="language-python">from statsmodels.stats.outliers_influence import variance_inflation_factor
+import numpy as np
+
+vars_pred = ["study_hours", "class_attendance", "sleep_hours"]
+X_vif = sm.add_constant(df[vars_pred].values)
+
+for i, var in enumerate(vars_pred):
+    vif = variance_inflation_factor(X_vif, i + 1)   # +1 para saltar la constante
+    print(f"VIF {var:20s}: {vif:.2f}")</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Eliminar una variable colineal y comparar errores estándar</summary>
+      <div class="dbody">
+        <p>Si dos predictores tienen VIF alto, la solución más directa es eliminar uno de ellos. Compara los errores estándar antes y después:</p>
+        <pre><code class="language-python"># Con colinealidad: study_hours y class_attendance correlacionados
+X_col = sm.add_constant(df[["study_hours", "class_attendance"]])
+m_col = sm.OLS(df["exam_score"], X_col).fit()
+print("Con colinealidad:")
+print(m_col.bse)   # errores estándar de cada coeficiente
+
+# Sin colinealidad: eliminar class_attendance
+X_sin = sm.add_constant(df[["study_hours"]])
+m_sin = sm.OLS(df["exam_score"], X_sin).fit()
+print("\nSin colinealidad:")
+print(m_sin.bse)   # errores estándar más pequeños → coeficientes más estables</code></pre>
+      </div>
+    </details>
+
+    <!-- RESUMEN -->
+    <h2 id="resumen">Resumen diagnóstico</h2>
+    <p>Antes de interpretar los coeficientes de cualquier modelo OLS o usarlo en producción, aplica esta tabla de verificación:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Problema</th>
+          <th>Síntoma en los datos</th>
+          <th>Herramienta de diagnóstico</th>
+          <th>Solución típica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>No-linealidad</strong></td>
+          <td>Patrón en arco en residuos vs ajustados</td>
+          <td>Gráfica de residuos vs \( \hat{y} \)</td>
+          <td>Términos polinómicos, transformar \( x \)</td>
+        </tr>
+        <tr>
+          <td><strong>Correlación de errores</strong></td>
+          <td>Residuos con tendencia en el tiempo</td>
+          <td>Durbin-Watson, gráfica en orden</td>
+          <td>Modelos de series de tiempo, agregar el tiempo como predictor</td>
+        </tr>
+        <tr>
+          <td><strong>Heterocedasticidad</strong></td>
+          <td>Residuos en forma de embudo</td>
+          <td>Gráfica de residuos vs \( \hat{y} \)</td>
+          <td>Transformación log, raíz cuadrada, WLS</td>
+        </tr>
+        <tr>
+          <td><strong>Outliers</strong></td>
+          <td>Residuos estudentizados con \( |r_i| > 3 \)</td>
+          <td><code>OLSInfluence.resid_studentized_external</code></td>
+          <td>Revisar el dato; eliminar solo con justificación</td>
+        </tr>
+        <tr>
+          <td><strong>Alto leverage</strong></td>
+          <td>\( h_{ii} > 2(p+1)/n \)</td>
+          <td><code>OLSInfluence.hat_matrix_diag</code></td>
+          <td>Revisar el dato; considerar modelos robustos</td>
+        </tr>
+        <tr>
+          <td><strong>Colinealidad</strong></td>
+          <td>VIF &gt; 10, errores estándar inflados</td>
+          <td><code>variance_inflation_factor</code></td>
+          <td>Eliminar una variable, combinar predictores, usar Ridge</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="def">
+      <div class="def-label">Regla de oro</div>
+      <p>Estos diagnósticos no son pasos opcionales. Aplicarlos <em>antes</em> de interpretar coeficientes o desplegar un modelo es parte del flujo estándar de cualquier análisis de regresión serio. Un modelo que pasa todas las pruebas diagnósticas tiene resultados confiables; uno que las falla, no.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    hljs.highlightAll();
+    const sections = document.querySelectorAll("h2[id], h3[id]");
+    const links    = document.querySelectorAll(".toc-sidebar a");
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove("active"));
+          const active = document.querySelector(`.toc-sidebar a[href="#${e.target.id}"]`);
+          if (active) active.classList.add("active");
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    sections.forEach(s => obs.observe(s));
+  });
+</script>
+</body>
+</html>

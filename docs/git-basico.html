@@ -72,6 +72,22 @@
   .steps li{counter-increment:step;display:flex;gap:14px;margin-bottom:10px;color:var(--text-2);font-size:.9rem}
   .steps li::before{content:counter(step);flex:0 0 24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:2px}
 
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
+
+  .os-tabs{display:flex;gap:8px;margin:18px 0 0;border-bottom:1px solid var(--border);padding-bottom:0}
+  .os-tab{padding:7px 16px;font-size:.82rem;font-weight:600;color:var(--text-3);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;background:none;font-family:'Inter',sans-serif;transition:color .15s,background .15s}
+  .os-tab:hover{color:var(--text-2)}
+  .os-tab.active{color:var(--accent);background:var(--bg-alt);border-color:var(--border)}
+  .os-panel{display:none;background:var(--bg-alt);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:16px 18px}
+  .os-panel.active{display:block}
+
+  .section-divider{display:flex;align-items:center;gap:14px;margin:52px 0 44px}
+  .section-divider span{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);white-space:nowrap;font-family:'JetBrains Mono',monospace}
+  .section-divider::before,.section-divider::after{content:"";flex:1;height:1px;background:var(--border)}
+  .toc-group{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:10px 0 4px;list-style:none;padding:0}
+
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -88,9 +104,21 @@
 <div class="wrap">
   <aside class="toc-sidebar">
     <h2>Contenido</h2>
+    <li class="toc-group">Setup</li>
     <ol>
       <li><a href="#que-es">¿Qué son?</a></li>
+      <li><a href="#instalacion">Instalación</a></li>
       <li><a href="#config">Configuración inicial</a></li>
+      <li><a href="#ssh">Llave SSH</a>
+        <ol>
+          <li><a href="#ssh-generar">Generar la llave</a></li>
+          <li><a href="#ssh-agregar">Agregar al agente</a></li>
+          <li><a href="#ssh-github">Vincular con GitHub</a></li>
+        </ol>
+      </li>
+    </ol>
+    <li class="toc-group" style="margin-top:10px">Usando Git</li>
+    <ol>
       <li><a href="#flujo">Flujo básico</a>
         <ol>
           <li><a href="#init">git init</a></li>
@@ -122,13 +150,100 @@
       <p>Piensa en Git como el historial de guardado de un videojuego: puedes guardar en cualquier momento y cargar cualquier guardado anterior. GitHub es el servidor en la nube donde subes esos guardados para no perderlos y para que otros jugadores los descarguen.</p>
     </div>
 
+    <h2 id="instalacion">Instalación</h2>
+    <p>El proceso de instalación varía según el sistema operativo. Elige el tuyo:</p>
+
+    <div class="os-tabs">
+      <button class="os-tab active" onclick="showOS('windows', this)">Windows</button>
+      <button class="os-tab" onclick="showOS('macos', this)">macOS</button>
+      <button class="os-tab" onclick="showOS('linux', this)">Linux</button>
+    </div>
+
+    <div id="os-windows" class="os-panel active">
+      <p>Descarga el instalador oficial desde <strong>git-scm.com</strong> y ejecútalo. Durante la instalación, acepta las opciones predeterminadas. Al finalizar tendrás disponible <strong>Git Bash</strong>, una terminal que usarás para todos los comandos de este módulo.</p>
+      <div class="fig">
+        <img src="assets/git-basico/instalarGit.png" alt="Ventana de instalación de Git en Windows">
+        <div class="fig-caption">Ventana del instalador de Git para Windows. Las opciones por defecto son suficientes para comenzar.</div>
+      </div>
+    </div>
+
+    <div id="os-macos" class="os-panel">
+      <p>La forma más sencilla en macOS es instalar Git a través de <strong>Homebrew</strong>. Si no tienes Homebrew, instálalo primero con el siguiente comando en tu terminal:</p>
+      <pre><code class="language-bash">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+      <p>Una vez que tengas Homebrew, instala Git con:</p>
+      <pre><code class="language-bash">brew install git</code></pre>
+      <p>Para verificar que la instalación fue exitosa:</p>
+      <pre><code class="language-bash">git --version
+# git version 2.x.x</code></pre>
+    </div>
+
+    <div id="os-linux" class="os-panel">
+      <p>En la mayoría de las distribuciones Linux, Git se instala con el gestor de paquetes del sistema. Usa el comando correspondiente a tu distribución:</p>
+      <pre><code class="language-bash"># Ubuntu / Debian
+sudo apt update && sudo apt install git
+
+# Fedora
+sudo dnf install git
+
+# Arch Linux
+sudo pacman -S git</code></pre>
+      <p>Para verificar que la instalación fue exitosa:</p>
+      <pre><code class="language-bash">git --version
+# git version 2.x.x</code></pre>
+    </div>
+
     <h2 id="config">Configuración inicial</h2>
-    <p>La primera vez que usas Git en tu computadora debes decirle quién eres. Esta información queda registrada en cada commit que hagas.</p>
+    <p>La primera vez que usas Git en tu computadora debes decirle quién eres. Esta información queda registrada en cada commit que hagas. Esto aplica igual para Windows (Git Bash), macOS y Linux.</p>
 
     <pre><code class="language-bash">git config --global user.name "Tu Nombre"
 git config --global user.email "tu@email.com"</code></pre>
 
     <p>Las comillas son obligatorias para que Git interprete el nombre como una sola cadena.</p>
+
+    <h2 id="ssh">Llave SSH</h2>
+    <p>Una <strong>llave SSH</strong> permite conectarte a GitHub de forma segura sin tener que escribir tu usuario y contraseña cada vez que haces un <code>push</code> o <code>pull</code>. Se recomienda el algoritmo <strong>ed25519</strong> por ser más moderno, seguro y rápido.</p>
+
+    <h3 id="ssh-generar">Paso 1 — Generar la llave</h3>
+    <p>En la terminal (Git Bash en Windows, o la terminal nativa en macOS/Linux), ejecuta el siguiente comando reemplazando el correo por el tuyo:</p>
+    <pre><code class="language-bash">ssh-keygen -t ed25519 -C "correo@ejemplo.com"</code></pre>
+    <p>El sistema hará tres preguntas:</p>
+    <ul>
+      <li><strong>Archivo donde guardar la llave:</strong> presiona <code>Enter</code> para aceptar la ruta por defecto (<code>~/.ssh/id_ed25519</code>).</li>
+      <li><strong>Passphrase:</strong> puedes dejarlo en blanco presionando <code>Enter</code> dos veces, o escribir una contraseña para mayor seguridad.</li>
+    </ul>
+
+    <h3 id="ssh-agregar">Paso 2 — Iniciar el agente SSH y agregar la llave</h3>
+    <p>El agente SSH es un programa que corre en segundo plano y administra tus llaves para que no tengas que escribirlas cada vez.</p>
+    <p>Inicia el agente:</p>
+    <pre><code class="language-bash">eval "$(ssh-agent -s)"</code></pre>
+    <p>Agrega tu llave privada al agente:</p>
+    <pre><code class="language-bash">ssh-add ~/.ssh/id_ed25519</code></pre>
+
+    <h3 id="ssh-github">Paso 3 — Vincular la llave con GitHub</h3>
+    <p>Para que GitHub reconozca tu computadora necesitas copiar el contenido de tu llave pública y pegarlo en tu cuenta.</p>
+
+    <p><strong>Copiar la llave pública:</strong></p>
+    <pre><code class="language-bash">cat ~/.ssh/id_ed25519.pub</code></pre>
+    <p>Selecciona y copia todo el texto que aparece (comienza con <code>ssh-ed25519</code>).</p>
+
+    <p><strong>Agregarla en GitHub:</strong></p>
+    <ol>
+      <li>Inicia sesión en GitHub.</li>
+      <li>Haz clic en tu foto de perfil (esquina superior derecha) → <em>Settings</em>.</li>
+      <li>En el menú lateral izquierdo selecciona <em>SSH and GPG keys</em>.</li>
+      <li>Haz clic en el botón verde <strong>New SSH key</strong>.</li>
+      <li>En <em>Title</em> pon un nombre descriptivo (ej. <code>Laptop Dell</code>, <code>MacBook Universidad</code>).</li>
+      <li>En <em>Key type</em> deja <strong>Authentication Key</strong>.</li>
+      <li>En <em>Key</em> pega la llave que copiaste.</li>
+      <li>Haz clic en <strong>Add SSH key</strong>.</li>
+    </ol>
+
+    <p><strong>Probar la conexión:</strong></p>
+    <pre><code class="language-bash">ssh -T git@github.com</code></pre>
+    <p>La primera vez te preguntará si confías en la huella digital de GitHub. Escribe <code>yes</code> y presiona <code>Enter</code>. Si todo salió bien verás:</p>
+    <pre><code class="language-bash">Hi username! You've successfully authenticated, but GitHub does not provide shell access.</code></pre>
+
+    <div class="section-divider"><span>Usando Git</span></div>
 
     <h2 id="flujo">Flujo básico</h2>
 
@@ -201,5 +316,13 @@ git push -u origin main</code></pre>
   </main>
 </div>
 
+<script>
+function showOS(os, btn) {
+  document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('os-' + os).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

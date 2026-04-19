@@ -13,6 +13,8 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
+from statsmodels.stats.outliers_influence import OLSInfluence, variance_inflation_factor
+from statsmodels.stats.stattools import durbin_watson
 
 # ─── Paleta de colores coherente con el tema oscuro del sitio ──────────────
 DARK = "#0f0f11"
@@ -478,6 +480,250 @@ def gen_pruebas_hipotesis():
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO: problemas-regresion
+# ──────────────────────────────────────────────────────────────────────────────
+def gen_problemas_regresion():
+    D = Path("docs/assets/problemas-regresion")
+    D.mkdir(parents=True, exist_ok=True)
+
+    rng = np.random.RandomState(42)
+    n = 200
+
+    # --- residuos-nolinealidad.png ---
+    # Datos sintéticos con relación cuadrática
+    x_nl = np.linspace(0, 10, n)
+    y_nl = 2 * x_nl + 0.5 * x_nl**2 + rng.normal(0, 4, n)
+
+    X_lin = sm.add_constant(x_nl)
+    m_lin = sm.OLS(y_nl, X_lin).fit()
+
+    X_poly = sm.add_constant(np.column_stack([x_nl, x_nl**2]))
+    m_poly = sm.OLS(y_nl, X_poly).fit()
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig.suptitle("No-linealidad: residuos vs valores ajustados", fontsize=12)
+
+    axes[0].scatter(m_lin.fittedvalues, m_lin.resid,
+                    color=ACCENT, alpha=0.5, s=18, edgecolors="none")
+    axes[0].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[0].set_title("Modelo lineal — patrón en arco")
+    axes[0].set_xlabel("Valores ajustados ŷ")
+    axes[0].set_ylabel("Residuos")
+    axes[0].grid(True)
+
+    axes[1].scatter(m_poly.fittedvalues, m_poly.resid,
+                    color=ACCENT, alpha=0.5, s=18, edgecolors="none")
+    axes[1].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[1].set_title("Modelo cuadrático — scatter sin patrón")
+    axes[1].set_xlabel("Valores ajustados ŷ")
+    axes[1].set_ylabel("Residuos")
+    axes[1].grid(True)
+
+    plt.tight_layout()
+    save(D / "residuos-nolinealidad.png")
+
+    # --- correlacion-errores.png ---
+    # Panel izquierdo: residuos autocorrelacionados (caminata aleatoria)
+    # Panel derecho: residuos independientes (ruido blanco)
+    resid_corr = np.cumsum(rng.normal(0, 1, n)) * 0.3
+    resid_indep = rng.normal(0, 1, n)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig.suptitle("Correlación de errores: residuos en orden de observación", fontsize=12)
+
+    dw_corr = durbin_watson(resid_corr)
+    axes[0].plot(np.arange(n), resid_corr, color=ACCENT, linewidth=0.8, alpha=0.8)
+    axes[0].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[0].set_title(f"Residuos autocorrelacionados  (DW = {dw_corr:.2f})")
+    axes[0].set_xlabel("Índice de observación")
+    axes[0].set_ylabel("Residuo")
+    axes[0].grid(True)
+
+    dw_indep = durbin_watson(resid_indep)
+    axes[1].plot(np.arange(n), resid_indep, color=ACCENT, linewidth=0.8, alpha=0.8)
+    axes[1].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[1].set_title(f"Residuos independientes  (DW = {dw_indep:.2f})")
+    axes[1].set_xlabel("Índice de observación")
+    axes[1].set_ylabel("Residuo")
+    axes[1].grid(True)
+
+    plt.tight_layout()
+    save(D / "correlacion-errores.png")
+
+    # --- heterocedasticidad.png ---
+    # Datos sintéticos: varianza crece con x
+    x_h = np.linspace(1, 10, n)
+    y_h = 3 * x_h + rng.normal(0, 1, n) * x_h   # heterocedasticidad: σ ∝ x
+
+    X_h = sm.add_constant(x_h)
+    m_h = sm.OLS(y_h, X_h).fit()
+
+    y_log = np.log(y_h - y_h.min() + 1)
+    m_hlog = sm.OLS(y_log, X_h).fit()
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig.suptitle("Heterocedasticidad: varianza no constante de residuos", fontsize=12)
+
+    axes[0].scatter(m_h.fittedvalues, m_h.resid,
+                    color=ACCENT, alpha=0.5, s=18, edgecolors="none")
+    axes[0].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[0].set_title("Escala original — patrón de embudo")
+    axes[0].set_xlabel("Valores ajustados ŷ")
+    axes[0].set_ylabel("Residuos")
+    axes[0].grid(True)
+
+    axes[1].scatter(m_hlog.fittedvalues, m_hlog.resid,
+                    color=ACCENT, alpha=0.5, s=18, edgecolors="none")
+    axes[1].axhline(0, color=RED, linestyle="--", linewidth=1.5)
+    axes[1].set_title("Tras transformación log — varianza estable")
+    axes[1].set_xlabel("Valores ajustados ŷ")
+    axes[1].set_ylabel("Residuos")
+    axes[1].grid(True)
+
+    plt.tight_layout()
+    save(D / "heterocedasticidad.png")
+
+    # --- outliers.png ---
+    df = pd.read_csv("data/csvs/examenes.csv").sample(n=100, random_state=42)
+    X_o = sm.add_constant(np.array(df["study_hours"]))
+    y_o = np.array(df["exam_score"])
+
+    # Modelo sin outliers
+    m_clean = sm.OLS(y_o, X_o).fit()
+
+    # Inyectar dos outliers
+    y_out = y_o.copy()
+    y_out[0]  = y_o.mean() + 4 * y_o.std()
+    y_out[10] = y_o.mean() - 4 * y_o.std()
+    m_out = sm.OLS(y_out, X_o).fit()
+
+    # Residuos estudentizados del modelo con outliers
+    infl = OLSInfluence(m_out)
+    r_stud = infl.resid_studentized_external
+
+    x_vals = df["study_hours"].values
+    x_line = np.linspace(x_vals.min(), x_vals.max(), 100)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig.suptitle("Outliers: impacto en la recta de regresión", fontsize=12)
+
+    axes[0].scatter(x_vals, y_o, color=TEXT2, alpha=0.5, s=20, edgecolors="none", label="Datos normales")
+    axes[0].scatter(x_vals[[0, 10]], y_out[[0, 10]],
+                    color=RED, s=80, marker="*", zorder=5, label="Outliers")
+    axes[0].plot(x_line, m_clean.params[0] + m_clean.params[1] * x_line,
+                 color=ACCENT, linewidth=2, label="Sin outliers")
+    axes[0].plot(x_line, m_out.params[0] + m_out.params[1] * x_line,
+                 color=RED, linewidth=2, linestyle="--", label="Con outliers")
+    axes[0].set_title("Efecto de dos outliers en la recta")
+    axes[0].set_xlabel("Horas de estudio")
+    axes[0].set_ylabel("Calificación")
+    axes[0].legend(fontsize=8)
+    axes[0].grid(True)
+
+    axes[1].scatter(np.arange(len(r_stud)), r_stud,
+                    color=ACCENT, alpha=0.6, s=20, edgecolors="none")
+    axes[1].axhline( 3, color=RED, linestyle="--", linewidth=1.5, label="|r| = 3")
+    axes[1].axhline(-3, color=RED, linestyle="--", linewidth=1.5)
+    outlier_idx = np.where(np.abs(r_stud) > 3)[0]
+    axes[1].scatter(outlier_idx, r_stud[outlier_idx],
+                    color=RED, s=60, zorder=5)
+    axes[1].set_title("Residuos estudentizados")
+    axes[1].set_xlabel("Índice de observación")
+    axes[1].set_ylabel("Residuo estudentizado")
+    axes[1].legend(fontsize=8)
+    axes[1].grid(True)
+
+    plt.tight_layout()
+    save(D / "outliers.png")
+
+    # --- leverage.png ---
+    X_lev = sm.add_constant(np.array(df["study_hours"]))
+    y_lev = np.array(df["exam_score"])
+    m_lev = sm.OLS(y_lev, X_lev).fit()
+    infl_lev = OLSInfluence(m_lev)
+    h_vals = infl_lev.hat_matrix_diag
+
+    p = 1   # un predictor
+    n_lev = len(y_lev)
+    umbral = 2 * (p + 1) / n_lev
+    alto = h_vals > umbral
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig.suptitle("Alto leverage: puntos con posición inusual en X", fontsize=12)
+
+    axes[0].scatter(x_vals[~alto], y_lev[~alto],
+                    color=ACCENT, alpha=0.6, s=22, edgecolors="none", label="Normal")
+    axes[0].scatter(x_vals[alto], y_lev[alto],
+                    color=RED, s=50, zorder=5, label=f"Alto leverage (h > {umbral:.2f})")
+    axes[0].set_title("Puntos de alto leverage resaltados")
+    axes[0].set_xlabel("Horas de estudio")
+    axes[0].set_ylabel("Calificación")
+    axes[0].legend(fontsize=8)
+    axes[0].grid(True)
+
+    axes[1].scatter(np.arange(n_lev), h_vals,
+                    color=ACCENT, alpha=0.6, s=18, edgecolors="none")
+    axes[1].axhline(umbral, color=RED, linestyle="--", linewidth=1.5,
+                    label=f"Umbral 2(p+1)/n = {umbral:.2f}")
+    axes[1].scatter(np.where(alto)[0], h_vals[alto],
+                    color=RED, s=50, zorder=5)
+    axes[1].set_title("Estadístico h_ii por observación")
+    axes[1].set_xlabel("Índice de observación")
+    axes[1].set_ylabel("h_ii (leverage)")
+    axes[1].legend(fontsize=8)
+    axes[1].grid(True)
+
+    plt.tight_layout()
+    save(D / "leverage.png")
+
+    # --- colinealidad.png ---
+    df_full = pd.read_csv("data/csvs/examenes.csv").sample(n=500, random_state=7)
+    x_sh = df_full["study_hours"].values
+    x_ca = df_full["class_attendance"].values
+    x_sl = df_full["sleep_hours"].values
+    y_c  = df_full["exam_score"].values
+
+    r = np.corrcoef(x_sh, x_ca)[0, 1]
+
+    vars_multi = ["study_hours", "class_attendance", "sleep_hours"]
+    X_vif = sm.add_constant(np.column_stack([x_sh, x_ca, x_sl]))
+    vif_vals = [
+        variance_inflation_factor(X_vif, i + 1)
+        for i in range(len(vars_multi))
+    ]
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig.suptitle("Colinealidad: predictores correlacionados", fontsize=12)
+
+    axes[0].scatter(x_sh, x_ca, color=ACCENT, alpha=0.3, s=15, edgecolors="none")
+    axes[0].set_title(f"Horas de estudio vs Asistencia  (r = {r:.2f})")
+    axes[0].set_xlabel("Horas de estudio")
+    axes[0].set_ylabel("Asistencia a clase (%)")
+    axes[0].grid(True)
+    axes[0].text(0.05, 0.92, f"r = {r:.2f}", transform=axes[0].transAxes,
+                 fontsize=12, color=RED, fontweight="bold")
+
+    labels_short = ["study_hours", "class_attend.", "sleep_hours"]
+    colors_vif = [RED if v > 10 else ACCENT for v in vif_vals]
+    bars = axes[1].barh(labels_short, vif_vals, color=colors_vif,
+                        edgecolor=BORDER, linewidth=0.5)
+    axes[1].axvline(10, color=RED, linestyle="--", linewidth=1.5, label="VIF = 10")
+    axes[1].axvline(5,  color=TEXT2, linestyle=":", linewidth=1.2, label="VIF = 5")
+    for bar, v in zip(bars, vif_vals):
+        axes[1].text(v + 0.1, bar.get_y() + bar.get_height() / 2,
+                     f"{v:.1f}", va="center", fontsize=10)
+    axes[1].set_title("Factor de Inflación de Varianza (VIF)")
+    axes[1].set_xlabel("VIF")
+    axes[1].legend(fontsize=8)
+    axes[1].grid(True, axis="x")
+
+    plt.tight_layout()
+    save(D / "colinealidad.png")
+
+    print("→ problemas-regresion: OK")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # MAIN
 # ──────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -489,4 +735,5 @@ if __name__ == "__main__":
     gen_regresion_avanzada()
     gen_eda()
     gen_pruebas_hipotesis()
+    gen_problemas_regresion()
     print("\nListo. Todas las imágenes generadas.")
