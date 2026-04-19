@@ -1,0 +1,52 @@
+name: Notify Module Changes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/*.html'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed modules and send notifications
+        env:
+          WEBHOOK_URL: ${{ secrets.DS_EXERCISES_WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.DS_EXERCISES_WEBHOOK_SECRET }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          send_notification() {
+            local file=$1
+            local change_type=$2
+            local module_name
+            module_name=$(basename "$file" .html)
+
+            echo "Notifying: $module_name ($change_type)"
+            payload=$(jq -n \
+              --arg module_name "$module_name" \
+              --arg change_type "$change_type" \
+              --arg file_path "$file" \
+              --arg commit_message "$COMMIT_MSG" \
+              '{module_name: $module_name, change_type: $change_type, file_path: $file_path, commit_message: $commit_message}')
+
+            curl -sf -X POST "$WEBHOOK_URL/notifications/webhook" \
+              -H "Content-Type: application/json" \
+              -H "X-Webhook-Secret: $WEBHOOK_SECRET" \
+              -d "$payload" || echo "ERROR: failed to notify $module_name"
+          }
+
+          ADDED=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'docs/*.html')
+          MODIFIED=$(git diff --name-only --diff-filter=M HEAD~1 HEAD -- 'docs/*.html')
+
+          for f in $ADDED; do
+            send_notification "$f" "new"
+          done
+
+          for f in $MODIFIED; do
+            send_notification "$f" "update"
+          done
