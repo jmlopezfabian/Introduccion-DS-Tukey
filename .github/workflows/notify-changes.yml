@@ -34,7 +34,7 @@ jobs:
               --arg commit_message "$COMMIT_MSG" \
               '{module_name: $module_name, change_type: $change_type, file_path: $file_path, commit_message: $commit_message}')
 
-            response=$(curl -s -w "\n%{http_code}" -X POST "$WEBHOOK_URL/notifications/webhook" \
+            response=$(curl -s -L -w "\n%{http_code}" -X POST "$WEBHOOK_URL/notifications/webhook" \
               -H "Content-Type: application/json" \
               -H "X-Webhook-Secret: $WEBHOOK_SECRET" \
               -d "$payload")
