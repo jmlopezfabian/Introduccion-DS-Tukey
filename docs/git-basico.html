@@ -130,6 +130,7 @@
       </li>
       <li><a href="#github">Conectar con GitHub</a></li>
       <li><a href="#ciclo">Ciclo de vida</a></li>
+      <li><a href="#gitflow">Gitflow</a></li>
     </ol>
   </aside>
 
@@ -310,6 +311,34 @@ git push -u origin main</code></pre>
       <summary><span class="tag">Más detalle</span> ¿Por qué dos pasos (add + commit)?</summary>
       <div class="dbody">
         <p>El área de preparación (<em>staging area</em>) te permite elegir exactamente qué cambios incluir en cada commit, aunque hayas modificado varios archivos. Esto facilita hacer commits pequeños y descriptivos en lugar de commits gigantes difíciles de entender. Por ejemplo, puedes modificar tres archivos pero hacer dos commits separados: uno con los cambios lógicos de una función y otro con la corrección de un bug.</p>
+      </div>
+    </details>
+
+    <h2 id="gitflow">Gitflow</h2>
+    <p><strong>Gitflow</strong> es una convención de trabajo que organiza el repositorio en ramas con roles definidos. En lugar de hacer todos los cambios directo en <code>main</code>, cada tarea vive en su propia rama hasta que está lista.</p>
+
+    <div class="def">
+      <div class="def-label">Las ramas principales</div>
+      <ul>
+        <li><strong>main</strong> — código en producción, siempre estable.</li>
+        <li><strong>develop</strong> — integración continua; aquí se unen los cambios listos para la próxima versión.</li>
+        <li><strong>feature/nombre</strong> — una rama por cada nueva funcionalidad; sale de <code>develop</code> y regresa a <code>develop</code>.</li>
+        <li><strong>hotfix/nombre</strong> — correcciones urgentes en producción; sale de <code>main</code> y se fusiona en <code>main</code> y <code>develop</code>.</li>
+      </ul>
+    </div>
+
+    <p>El flujo típico para una nueva funcionalidad es:</p>
+    <pre><code class="language-bash">git checkout develop
+git checkout -b feature/mi-feature   # crear la rama
+# ... trabajas, haces commits ...
+git checkout develop
+git merge feature/mi-feature         # integrar
+git branch -d feature/mi-feature     # limpiar</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> ¿Cuándo usar Gitflow?</summary>
+      <div class="dbody">
+        <p>Gitflow es útil en proyectos con versiones o equipos medianos. Para proyectos personales o equipos pequeños con despliegue continuo, muchas veces basta con una estrategia más simple: <em>trunk-based development</em>, donde todo va a <code>main</code> con ramas de feature muy cortas. Gitflow añade estructura pero también ceremonia; úsalo cuando el beneficio supera el costo.</p>
       </div>
     </details>
 
