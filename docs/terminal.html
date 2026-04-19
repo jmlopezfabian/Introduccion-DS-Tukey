@@ -68,6 +68,10 @@
   .dbody>*:last-child{margin-bottom:0}
   .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
 
+  .fig{margin:22px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt)}
+  .fig img{display:block;width:100%;height:auto}
+  .fig-caption{padding:8px 14px;font-size:.78rem;color:var(--text-3);border-top:1px solid var(--border)}
+
   @media(max-width:860px){.toc-sidebar{display:none}}
 </style>
 </head>
@@ -85,7 +89,7 @@
   <aside class="toc-sidebar">
     <h2>Contenido</h2>
     <ol>
-      <li><a href="#instalacion">Instalación de Git</a></li>
+      <li><a href="#instalacion">Instalación de Git Bash</a></li>
       <li><a href="#comandos">Comandos básicos</a>
         <ol>
           <li><a href="#pwd">pwd</a></li>
@@ -109,15 +113,42 @@
       <p class="lead">La terminal es la interfaz de texto con el sistema operativo. Dominar sus comandos básicos te permite navegar, crear y gestionar archivos sin usar el ratón.</p>
     </div>
 
-    <h2 id="instalacion">Instalación de Git</h2>
-    <p>Antes de usar la terminal en Windows es necesario instalar <strong>Git Bash</strong>, que incluye la terminal de Unix junto con Git. Los usuarios de Mac y Linux ya tienen una terminal disponible.</p>
+    <h2 id="instalacion">Instalación de Git Bash (Windows)</h2>
+    <p>En Windows no existe una terminal Unix nativa. Por eso instalamos <strong>Git Bash</strong>, que viene incluido con Git y nos da acceso a todos los comandos de esta clase. Los usuarios de Mac y Linux ya tienen terminal disponible y pueden saltar directo a la siguiente sección.</p>
 
     <div class="def">
-      <div class="def-label">Windows</div>
-      <p>Durante la instalación de Git, en la pantalla de configuración de PATH, selecciona la segunda opción: <em>"Git from the command line and also from 3rd-party software"</em>. Para todo lo demás puedes hacer clic en Siguiente.</p>
+      <div class="def-label">Solo para Windows</div>
+      <p>Git Bash emula una terminal Unix en Windows. Al instalarlo obtienes dos cosas al mismo tiempo: la terminal y Git.</p>
     </div>
 
-    <p>Una vez instalado, abre <strong>Git Bash</strong> (Windows) o la <strong>Terminal</strong> (Mac/Linux) para continuar.</p>
+    <h3>Pasos de instalación</h3>
+    <ol>
+      <li>Ve a <strong>git-scm.com</strong> y haz clic en el botón de descarga para Windows. Se descargará un archivo <code>.exe</code>.</li>
+      <li>Ejecuta el instalador. Haz clic en <strong>Next</strong> en las primeras pantallas (licencia y carpeta de destino).</li>
+      <li>En la pantalla <strong>"Select Components"</strong> deja las opciones marcadas por defecto y continúa.</li>
+      <li>En la pantalla <strong>"Adjusting your PATH environment"</strong>, selecciona la segunda opción: <em>"Git from the command line and also from 3rd-party software"</em>. Esta opción es importante.</li>
+      <li>En la pantalla <strong>"Adjusting the name of the initial branch"</strong>, selecciona <em>"Override the default branch name for new repositories"</em> y escribe <code>main</code> en el campo de texto. Esto hace que tus repositorios usen <code>main</code> como rama principal, que es el estándar actual en GitHub.</li>
+      <li>En el resto de pantallas puedes aceptar los valores predeterminados haciendo clic en <strong>Next</strong> hasta llegar a <strong>Install</strong>.</li>
+      <li>Al finalizar, marca la casilla <em>"Launch Git Bash"</em> y haz clic en <strong>Finish</strong>.</li>
+    </ol>
+
+    <div class="fig">
+      <img src="assets/git-basico/instalarGit.png" alt="Ventana de instalación de Git en Windows">
+      <div class="fig-caption">Ventana del instalador de Git para Windows. La opción clave está en la pantalla de PATH: selecciona <em>"Git from the command line and also from 3rd-party software"</em>.</div>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Cómo abrir Git Bash después</span> Acceso rápido</summary>
+      <div class="dbody">
+        <p>Una vez instalado, puedes abrir Git Bash de dos formas:</p>
+        <ul>
+          <li>Busca <strong>Git Bash</strong> en el menú Inicio de Windows.</li>
+          <li>Haz clic derecho en cualquier carpeta del Explorador de archivos y selecciona <em>"Open Git Bash here"</em> — esto abre la terminal ya posicionada en esa carpeta.</li>
+        </ul>
+      </div>
+    </details>
+
+    <p>Una vez instalado, abre <strong>Git Bash</strong> para continuar con los comandos de esta clase.</p>
 
     <h2 id="comandos">Comandos básicos</h2>
     <p>Estos son los comandos que usarás en prácticamente todos los proyectos. No hace falta memorizarlos ahora, se vuelven automáticos con el uso.</p>
