@@ -34,10 +34,18 @@ jobs:
               --arg commit_message "$COMMIT_MSG" \
               '{module_name: $module_name, change_type: $change_type, file_path: $file_path, commit_message: $commit_message}')
 
-            curl -sf -X POST "$WEBHOOK_URL/notifications/webhook" \
+            response=$(curl -s -w "\n%{http_code}" -X POST "$WEBHOOK_URL/notifications/webhook" \
               -H "Content-Type: application/json" \
               -H "X-Webhook-Secret: $WEBHOOK_SECRET" \
-              -d "$payload" || echo "ERROR: failed to notify $module_name"
+              -d "$payload")
+            http_code=$(echo "$response" | tail -1)
+            body=$(echo "$response" | head -n -1)
+            if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+              echo "OK ($http_code): $module_name notified"
+            else
+              echo "ERROR: failed to notify $module_name — HTTP $http_code — $body"
+              exit 1
+            fi
           }
 
           ADDED=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'docs/*.html')
