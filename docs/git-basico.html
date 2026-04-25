@@ -130,7 +130,22 @@
       </li>
       <li><a href="#github">Conectar con GitHub</a></li>
       <li><a href="#ciclo">Ciclo de vida</a></li>
-      <li><a href="#gitflow">Gitflow</a></li>
+      <li><a href="#gitflow">Gitflow</a>
+        <ol>
+          <li><a href="#gitflow-init">Configurar</a></li>
+          <li><a href="#gitflow-features">Features</a></li>
+          <li><a href="#gitflow-releases">Releases</a></li>
+          <li><a href="#gitflow-hotfix">Hotfixes</a></li>
+        </ol>
+      </li>
+      <li><a href="#equipo">Trabajar en equipo</a>
+        <ol>
+          <li><a href="#fork-clone">Fork y clone</a></li>
+          <li><a href="#pull-request">Pull Request</a></li>
+          <li><a href="#sincronizar">Sincronizar</a></li>
+          <li><a href="#conflictos">Conflictos</a></li>
+        </ol>
+      </li>
     </ol>
   </aside>
 
@@ -323,17 +338,321 @@ git push -u origin main</code></pre>
         <li><strong>main</strong> — código en producción, siempre estable.</li>
         <li><strong>develop</strong> — integración continua; aquí se unen los cambios listos para la próxima versión.</li>
         <li><strong>feature/nombre</strong> — una rama por cada nueva funcionalidad; sale de <code>develop</code> y regresa a <code>develop</code>.</li>
+        <li><strong>release/nombre</strong> — prepara una versión para producción; sale de <code>develop</code> y se fusiona en <code>main</code> y <code>develop</code>.</li>
         <li><strong>hotfix/nombre</strong> — correcciones urgentes en producción; sale de <code>main</code> y se fusiona en <code>main</code> y <code>develop</code>.</li>
       </ul>
     </div>
 
-    <p>El flujo típico para una nueva funcionalidad es:</p>
-    <pre><code class="language-bash">git checkout develop
-git checkout -b feature/mi-feature   # crear la rama
-# ... trabajas, haces commits ...
+    <h3 id="gitflow-init">Configurar Gitflow</h3>
+    <p>La herramienta <code>git flow</code> automatiza la creación y fusión de ramas siguiendo esta convención. Primero hay que inicializarla en el repositorio:</p>
+    <pre><code class="language-bash">git flow init</code></pre>
+    <p>El comando hace una serie de preguntas. Los valores por defecto son los estándar — puedes aceptarlos todos presionando <kbd>Enter</kbd>:</p>
+    <pre><code class="language-bash">Branch name for production releases: [main]
+Branch name for "next release" development: [develop]
+Feature branches: [feature/]
+Release branches: [release/]
+Hotfix branches: [hotfix/]
+Support branches: [support/]
+Version tag prefix: [v]</code></pre>
+    <p>La única excepción al default es el prefijo de versión: escribe <code>v</code> para que los tags queden como <code>v1.2.0</code> en lugar de solo <code>1.2.0</code>. Es la convención más extendida en GitHub.</p>
+    <p>Después de <code>git flow init</code> ya tienes las ramas <code>main</code> y <code>develop</code> creadas y el repositorio listo para el flujo completo.</p>
+
+    <h3 id="gitflow-features">Features</h3>
+    <p>Cada nueva funcionalidad vive en su propia rama <code>feature/</code>. El flujo completo es:</p>
+    <pre><code class="language-bash"># Iniciar una feature (crea la rama y cambia a ella)
+git flow feature start nombre-feature
+
+# ... trabajas, haces commits normalmente ...
+git add archivo.py
+git commit -m "feat: descripción del cambio"
+
+# Publicar la rama en GitHub para que el equipo la vea
+git flow feature publish nombre-feature
+
+# Finalizar: hace merge a develop y borra la rama
+git flow feature finish nombre-feature</code></pre>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> Sin la herramienta <code>git flow</code></summary>
+      <div class="dbody">
+        <p>Si prefieres hacerlo a mano, el equivalente exacto es:</p>
+        <pre><code class="language-bash">git checkout develop
+git checkout -b feature/nombre-feature
+
+# ... commits ...
+
 git checkout develop
-git merge feature/mi-feature         # integrar
-git branch -d feature/mi-feature     # limpiar</code></pre>
+git merge --no-ff feature/nombre-feature
+git branch -d feature/nombre-feature
+git push origin develop</code></pre>
+        <p>La bandera <code>--no-ff</code> (<em>no fast-forward</em>) preserva en el historial que los commits pertenecieron a una feature, aunque la rama ya no exista.</p>
+      </div>
+    </details>
+
+    <h3 id="gitflow-releases">Releases</h3>
+    <p>Cuando <code>develop</code> tiene suficiente trabajo listo para salir a producción, se crea una rama <code>release/</code>. En ella solo van correcciones menores y ajustes de última hora — no features nuevas.</p>
+
+    <div class="def">
+      <div class="def-label">Versionado semántico — <code>MAJOR.MINOR.PATCH</code></div>
+      <p>Los números del tag siguen la convención <strong>Semantic Versioning</strong>: tres cifras separadas por puntos, cada una con una regla clara sobre cuándo sube.</p>
+      <ul>
+        <li><strong>PATCH</strong> (tercer número) — corrección de bugs que no cambia la API. Sube en cada hotfix. Ejemplo: <code>v1.2.0</code> → <code>v1.2.1</code>.</li>
+        <li><strong>MINOR</strong> (segundo número) — funcionalidad nueva que es compatible con versiones anteriores. Sube en cada release con features. Al subir MINOR, PATCH vuelve a cero. Ejemplo: <code>v1.2.1</code> → <code>v1.3.0</code>.</li>
+        <li><strong>MAJOR</strong> (primer número) — cambio que rompe compatibilidad con versiones anteriores. Al subir MAJOR, MINOR y PATCH vuelven a cero. Ejemplo: <code>v1.3.0</code> → <code>v2.0.0</code>.</li>
+      </ul>
+    </div>
+
+    <pre><code class="language-bash"># Crear la release desde develop
+git flow release start 1.3.0
+
+# Pequeños ajustes: número de versión, changelog, etc.
+git commit -m "chore: bump version to 1.3.0"
+
+# Finalizar: merge a main y a develop, crea el tag automáticamente
+git flow release finish 1.3.0</code></pre>
+
+    <p>Al finalizar, <code>git flow</code> crea el tag <code>v1.3.0</code> en <code>main</code> (con el prefijo <code>v</code> que configuraste). Para subir todo de una sola vez — ramas y tags — usa:</p>
+    <pre><code class="language-bash">git push --all && git push --tags</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Tip</span> Ver todos los tags en orden de versión</summary>
+      <div class="dbody">
+        <p>El listado normal de <code>git tag</code> ordena alfabéticamente, lo que pone <code>1.10.0</code> antes que <code>1.9.0</code>. Para orden semántico correcto:</p>
+        <pre><code class="language-bash">git tag | sort -V</code></pre>
+        <p>La bandera <code>-V</code> (<em>version sort</em>) entiende números dentro de cadenas, así que <code>1.9.0</code> queda antes de <code>1.10.0</code> como corresponde.</p>
+        <p>Para ver solo el último tag:</p>
+        <pre><code class="language-bash">git tag | sort -V | tail -1   # 1.2.0</code></pre>
+      </div>
+    </details>
+
+    <h3 id="gitflow-hotfix">Hotfixes</h3>
+    <p>Un <strong>hotfix</strong> es una corrección urgente sobre el código que ya está en producción. No puede esperar al ciclo normal de develop, así que sale directamente de <code>main</code>.</p>
+    <pre><code class="language-bash"># Crear hotfix desde main
+git flow hotfix start 1.2.1
+
+# Corregir el bug, commitear
+git add fix.py
+git commit -m "fix: corregir error crítico en autenticación"
+
+# Finalizar: merge a main y a develop, crea el tag
+git flow hotfix finish 1.2.1</code></pre>
+
+    <p>El hotfix se fusiona automáticamente en <strong>ambas</strong> ramas: <code>main</code> (para producción) y <code>develop</code> (para que la corrección no se pierda en la próxima versión). Después publica todo:</p>
+    <pre><code class="language-bash">git push --all && git push --tags</code></pre>
+
+    <div class="def">
+      <div class="def-label">¿Por qué <code>--all</code> y <code>--tags</code> por separado?</div>
+      <p><code>git push --all</code> sube todas las ramas locales al remoto. <code>git push --tags</code> sube todos los tags. Git no incluye tags en un push normal, por eso necesitas el segundo comando. Encadenarlos con <code>&&</code> asegura que el segundo solo se ejecuta si el primero tuvo éxito.</p>
+    </div>
+
+    <h2 id="equipo">Trabajar en equipo</h2>
+    <p>Gitflow define las reglas del juego. Ahora veamos cómo las siguen varias personas al mismo tiempo: cómo cada quien trabaja en su propia rama, cómo propone sus cambios y qué ocurre cuando dos personas tocan el mismo archivo.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 960 390" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;background:#17171b;font-family:ui-monospace,monospace">
+
+        <!-- Branch labels -->
+        <text x="118" y="59"  text-anchor="end" fill="#6c7fea" font-size="12">main</text>
+        <text x="118" y="134" text-anchor="end" fill="#ea6c6c" font-size="12">develop</text>
+        <text x="118" y="204" text-anchor="end" fill="#4ecb8a" font-size="11">feature/login</text>
+        <text x="118" y="269" text-anchor="end" fill="#e8a84a" font-size="11">feature/api</text>
+        <text x="118" y="344" text-anchor="end" fill="#c97be8" font-size="11">hotfix/</text>
+
+        <!-- Branch lines -->
+        <line x1="125" y1="55"  x2="930" y2="55"  stroke="#6c7fea" stroke-width="2.5"/>
+        <line x1="175" y1="130" x2="930" y2="130" stroke="#ea6c6c" stroke-width="2.5"/>
+        <line x1="240" y1="200" x2="450" y2="200" stroke="#4ecb8a" stroke-width="2.5"/>
+        <line x1="285" y1="265" x2="545" y2="265" stroke="#e8a84a" stroke-width="2.5"/>
+        <line x1="695" y1="340" x2="855" y2="340" stroke="#c97be8" stroke-width="2.5"/>
+
+        <!-- Connectors — features / release -->
+        <line x1="175" y1="55"  x2="175" y2="130" stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="240" y1="130" x2="240" y2="200" stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="285" y1="130" x2="285" y2="265" stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="450" y1="200" x2="450" y2="130" stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="545" y1="265" x2="545" y2="130" stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="625" y1="130" x2="625" y2="55"  stroke="#525260" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+        <!-- Connectors — hotfix branches from main at v1.0 -->
+        <line x1="695" y1="55"  x2="695" y2="340" stroke="#c97be8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- hotfix merges back to main -->
+        <line x1="855" y1="340" x2="855" y2="55"  stroke="#c97be8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- hotfix merges to develop too -->
+        <line x1="855" y1="340" x2="855" y2="130" stroke="#c97be8" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+        <!-- Commits — main -->
+        <circle cx="175" cy="55" r="6" fill="#6c7fea"/>
+        <circle cx="625" cy="55" r="6" fill="#6c7fea"/>
+        <circle cx="695" cy="55" r="7" fill="#17171b" stroke="#6c7fea" stroke-width="2.5"/>
+        <circle cx="855" cy="55" r="7" fill="#17171b" stroke="#6c7fea" stroke-width="2.5"/>
+
+        <!-- Commits — develop -->
+        <circle cx="175" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="215" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="240" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="285" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="450" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="545" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="625" cy="130" r="6" fill="#ea6c6c"/>
+        <circle cx="855" cy="130" r="6" fill="#ea6c6c"/>
+
+        <!-- Commits — feature/login -->
+        <circle cx="240" cy="200" r="6" fill="#4ecb8a"/>
+        <circle cx="310" cy="200" r="6" fill="#4ecb8a"/>
+        <circle cx="375" cy="200" r="6" fill="#4ecb8a"/>
+        <circle cx="450" cy="200" r="6" fill="#4ecb8a"/>
+
+        <!-- Commits — feature/api -->
+        <circle cx="285" cy="265" r="6" fill="#e8a84a"/>
+        <circle cx="350" cy="265" r="6" fill="#e8a84a"/>
+        <circle cx="420" cy="265" r="6" fill="#e8a84a"/>
+        <circle cx="480" cy="265" r="6" fill="#e8a84a"/>
+        <circle cx="545" cy="265" r="6" fill="#e8a84a"/>
+
+        <!-- Commits — hotfix -->
+        <circle cx="695" cy="340" r="6" fill="#c97be8"/>
+        <circle cx="760" cy="340" r="6" fill="#c97be8"/>
+        <circle cx="855" cy="340" r="6" fill="#c97be8"/>
+
+        <!-- Labels -->
+        <text x="450" y="118" text-anchor="middle" fill="#4ecb8a" font-size="10">PR #1</text>
+        <text x="545" y="118" text-anchor="middle" fill="#e8a84a" font-size="10">PR #2</text>
+        <text x="625" y="43"  text-anchor="middle" fill="#8a8a9a"  font-size="10">merge</text>
+
+        <!-- v1.0 tag -->
+        <rect x="674" y="36" width="42" height="14" rx="3" fill="#6c7fea" opacity="0.2"/>
+        <text x="695" y="47" text-anchor="middle" fill="#6c7fea" font-size="10">v1.0</text>
+
+        <!-- v1.0.1 tag -->
+        <rect x="830" y="36" width="50" height="14" rx="3" fill="#c97be8" opacity="0.2"/>
+        <text x="855" y="47" text-anchor="middle" fill="#c97be8" font-size="10">v1.0.1</text>
+
+        <!-- hotfix merge labels -->
+        <text x="855" y="118" text-anchor="middle" fill="#c97be8" font-size="10">↑ develop</text>
+        <text x="875" y="328" text-anchor="start"  fill="#c97be8" font-size="10">fix</text>
+
+        <!-- Time arrow -->
+        <line x1="125" y1="375" x2="920" y2="375" stroke="#2a2a30" stroke-width="1.5"/>
+        <polygon points="920,371 928,375 920,379" fill="#2a2a30"/>
+        <text x="125" y="388" fill="#525260" font-size="10">tiempo →</text>
+      </svg>
+      <div class="fig-caption">Flujo completo: features en paralelo integradas vía PRs, release etiquetada como <code>v1.0</code>, y un <code>hotfix/</code> que parte de <code>main</code> y se fusiona tanto en <code>main</code> (<code>v1.0.1</code>) como en <code>develop</code>.</div>
+    </div>
+
+    <h3 id="fork-clone">Fork y clone</h3>
+    <p>Antes de contribuir a un repositorio necesitas una copia local. Hay dos caminos según tu relación con el proyecto.</p>
+
+    <div class="def">
+      <div class="def-label">Clone vs. Fork</div>
+      <ul>
+        <li><strong>Clone</strong> — copias un repositorio al que ya tienes acceso (eres miembro del equipo). Trabajas directamente en ese repo.</li>
+        <li><strong>Fork</strong> — creas tu propia copia en GitHub de un repo ajeno. Útil para proyectos de código abierto donde no tienes permisos de escritura.</li>
+      </ul>
+    </div>
+
+    <p>En ambos casos el comando para bajar el código a tu máquina es el mismo:</p>
+    <pre><code class="language-bash">git clone git@github.com:equipo/proyecto.git
+cd proyecto</code></pre>
+
+    <p>Después del clone ya tienes el historial completo y puedes crear ramas localmente.</p>
+
+    <h3 id="pull-request">Pull Request</h3>
+    <p>Un <strong>Pull Request</strong> (PR) es una propuesta formal de integrar tu rama al resto del código. Es el momento donde el equipo revisa, comenta y aprueba los cambios antes de que lleguen a <code>develop</code> o <code>main</code>.</p>
+
+    <div class="def">
+      <div class="def-label">Flujo de un Pull Request</div>
+      <ol>
+        <li>Creas una rama <code>feature/</code> y haces tus commits.</li>
+        <li>Subes la rama a GitHub con <code>git push origin feature/mi-feature</code>.</li>
+        <li>Abres el PR en GitHub: elige la rama base (<code>develop</code>) y la rama a integrar.</li>
+        <li>Tu equipo revisa el código, deja comentarios y solicita cambios si hace falta.</li>
+        <li>Una vez aprobado, se hace <em>merge</em> y la rama se puede eliminar.</li>
+      </ol>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Ciclo completo de una feature en equipo</summary>
+      <div class="dbody">
+        <pre><code class="language-bash"># 1. Partir de develop actualizado
+git checkout develop
+git pull origin develop
+
+# 2. Crear la rama de la feature
+git checkout -b feature/agregar-login
+
+# 3. Trabajar y hacer commits
+git add auth.py
+git commit -m "feat: agregar endpoint de login"
+
+# 4. Subir la rama
+git push origin feature/agregar-login
+
+# 5. Abrir el PR en GitHub → revisión del equipo → merge</code></pre>
+        <p>Después del merge en GitHub, limpia tu entorno local:</p>
+        <pre><code class="language-bash">git checkout develop
+git pull origin develop
+git branch -d feature/agregar-login</code></pre>
+      </div>
+    </details>
+
+    <h3 id="sincronizar">Sincronizar con el equipo</h3>
+    <p>Mientras trabajas en tu rama, otros miembros del equipo hacen merge de sus propias features. Para no quedarte atrás hay que traer esos cambios regularmente.</p>
+
+    <details class="dive">
+      <summary><span class="tag">Más detalle</span> <code>git fetch</code> vs <code>git pull</code></summary>
+      <div class="dbody">
+        <p><code>git fetch</code> descarga los cambios del remoto pero <strong>no los aplica</strong> a tu rama. Te deja ver qué cambió sin tocar tu trabajo.</p>
+        <p><code>git pull</code> hace fetch y además hace merge automáticamente en tu rama actual. Es el atajo más común cuando confías en que no habrá conflictos.</p>
+        <pre><code class="language-bash">git fetch origin          # ver qué hay de nuevo
+git pull origin develop   # bajar e integrar develop</code></pre>
+      </div>
+    </details>
+
+    <p>El hábito recomendado antes de abrir un PR es actualizar tu rama con los últimos cambios de <code>develop</code>:</p>
+    <pre><code class="language-bash">git checkout develop
+git pull origin develop
+git checkout feature/mi-feature
+git merge develop          # incorporar lo nuevo a tu rama</code></pre>
+
+    <p>Así el PR llega limpio, con los conflictos ya resueltos por ti antes de la revisión.</p>
+
+    <h3 id="conflictos">Conflictos de merge</h3>
+    <p>Un <strong>conflicto de merge</strong> ocurre cuando dos personas modificaron las mismas líneas de un archivo en ramas distintas. Git no sabe cuál versión conservar y te pide que decidas tú.</p>
+
+    <div class="def">
+      <div class="def-label">Marcadores de conflicto</div>
+      <p>Git inserta estos marcadores directamente en el archivo con conflicto:</p>
+      <pre><code class="language-bash">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+tu versión del código
+=======
+versión de la otra rama
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/otra-rama</code></pre>
+      <p>Todo lo que está entre <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> y <code>=======</code> es lo que tiene <em>tu</em> rama. Entre <code>=======</code> y <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> está lo que viene de la otra rama.</p>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Resolver un conflicto paso a paso</summary>
+      <div class="dbody">
+        <p>Imagina que tú y un compañero editaron la misma línea en <code>config.py</code>. Al hacer merge Git te avisa:</p>
+        <pre><code class="language-bash">git merge feature/nueva-config
+# Auto-merging config.py
+# CONFLICT (content): Merge conflict in config.py
+# Automatic merge failed; fix conflicts and then commit the result.</code></pre>
+        <p>Abres <code>config.py</code> y encuentras:</p>
+        <pre><code class="language-python">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+DEBUG = False
+=======
+DEBUG = True
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/nueva-config</code></pre>
+        <p>Decides cuál conservar (o combinas ambas versiones) y dejas el archivo limpio:</p>
+        <pre><code class="language-python">DEBUG = False   # producción siempre en False</code></pre>
+        <p>Luego cierras el conflicto:</p>
+        <pre><code class="language-bash">git add config.py
+git commit -m "fix: resolver conflicto en DEBUG"</code></pre>
+      </div>
+    </details>
+
+    <p>Los conflictos son normales en equipos activos. La clave es resolverlos con calma: leer las dos versiones, entender la intención de cada una y elegir (o combinar) con criterio.</p>
 
   </main>
 </div>
