@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandas — Clases DS Tukey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root{--bg:#0f0f11;--bg-alt:#17171b;--border:#2a2a30;--accent:#6c7fea;--accent-dim:rgba(108,127,234,.1);--text:#e2e2e8;--text-2:#8a8a9a;--text-3:#525260}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  nav{border-bottom:1px solid var(--border);padding:0 2.5rem;height:52px;display:flex;align-items:center;position:sticky;top:0;background:var(--bg);z-index:100}
+  .nav-left{display:flex;align-items:center;gap:10px;font-size:13px}
+  .nav-left a{color:var(--text-2)}.nav-left a:hover{color:var(--text);text-decoration:none}
+  .nav-sep{color:var(--text-3)}.nav-current{color:var(--text);font-weight:500}
+  /* LAYOUT */
+  .wrap{display:flex;justify-content:center;gap:2rem;max-width:1020px;margin:0 auto;padding:48px 2.5rem 80px}
+  /* SIDEBAR */
+  .toc-sidebar{flex:0 0 200px;position:sticky;top:72px;align-self:flex-start;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:2rem;font-family:'Inter',sans-serif;font-size:.78rem;line-height:1.5}
+  .toc-sidebar h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:0 0 .75rem}
+  .toc-sidebar ol{margin:0;padding:0 0 0 1rem;list-style:decimal}
+  .toc-sidebar ol ol{margin-top:.2rem;font-size:.95em}
+  .toc-sidebar li{margin:.3rem 0}
+  .toc-sidebar a{color:var(--text-2);text-decoration:none;transition:color .15s}
+  .toc-sidebar a:hover,.toc-sidebar a.active{color:var(--accent)}
+  /* CONTENT */
+  .content{flex:1;min-width:0}
+  .page-head{padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .page-mod{font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+  h1{font-size:1.85rem;font-weight:700;letter-spacing:-.4px;line-height:1.2;color:var(--text)}
+  .lead{margin-top:12px;color:var(--text-2);font-size:.95rem;line-height:1.75}
+  h2{font-size:1.15rem;font-weight:700;letter-spacing:-.2px;color:var(--text);margin:44px 0 14px}
+  h3{font-size:.95rem;font-weight:600;color:var(--text);margin:26px 0 10px}
+  p{color:var(--text-2);margin-bottom:14px}
+  ul,ol{padding-left:1.4em;margin-bottom:14px;color:var(--text-2)}li{margin-bottom:5px}
+  strong{color:var(--text);font-weight:600}
+  code{font-family:'JetBrains Mono',monospace;font-size:.82em;background:var(--bg-alt);padding:2px 5px;border-radius:4px;border:1px solid var(--border);color:#c9d1d9}
+  pre{margin:18px 0;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+  pre code{background:none;border:none;padding:0;font-size:.83rem;line-height:1.65}
+  .def{border-left:2px solid var(--accent);background:var(--bg-alt);padding:14px 18px;border-radius:0 7px 7px 0;margin:18px 0}
+  .def .def-label{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .def p{margin:0;font-size:.9rem}
+  .formula{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:18px 0;text-align:center;overflow-x:auto;color:var(--text)}
+  details{border:1px solid var(--border);border-radius:8px;margin:18px 0;overflow:hidden}
+  details.ex{border-left:2px solid var(--accent)}details.dive{border-left:2px solid var(--text-3)}
+  summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.875rem;color:var(--text-2);display:flex;align-items:center;gap:8px;list-style:none;background:var(--bg-alt);user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:var(--accent);transition:transform .2s;font-size:.75rem}
+  details[open] summary::before{transform:rotate(90deg)}
+  details[open] summary{color:var(--text)}
+  .dbody{padding:16px 18px;border-top:1px solid var(--border)}
+  .dbody>*:last-child{margin-bottom:0}
+  .tag{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-right:4px}
+  .nb-ref{display:flex;align-items:center;gap:10px;margin-bottom:36px;font-size:.83rem;color:var(--text-2)}
+  .nb-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);background:var(--bg-alt);border:1px solid var(--border);padding:2px 8px;border-radius:4px}
+  @media(max-width:860px){.toc-sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="../index.html">Inicio</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Pandas</span>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="toc-sidebar">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#series">Series</a>
+        <ol>
+          <li><a href="#crear-serie">Desde una lista</a></li>
+          <li><a href="#serie-dict">Desde un diccionario</a></li>
+        </ol>
+      </li>
+      <li><a href="#index">El índice</a></li>
+      <li><a href="#metodos-series">Métodos de Series</a></li>
+      <li><a href="#dataframe">DataFrame</a></li>
+      <li><a href="#propiedades">Propiedades</a></li>
+      <li><a href="#metodos-df">Métodos de DataFrame</a></li>
+      <li><a href="#columnas">Selección de columnas</a></li>
+      <li><a href="#filtrado">Filtrado de filas</a></li>
+      <li><a href="#loc-iloc">loc e iloc</a>
+        <ol>
+          <li><a href="#loc">loc</a></li>
+          <li><a href="#iloc">iloc</a></li>
+        </ol>
+      </li>
+      <li><a href="#groupby">GroupBy</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+    <div class="page-head">
+      <div class="page-mod">02 — pandas</div>
+      <h1>Pandas</h1>
+      <p class="lead">La librería de Python para manipulación y análisis de datos tabulares: Series, DataFrames, filtrado, indexación avanzada con <code>loc</code> e <code>iloc</code>, y agrupaciones con <code>groupby</code>.</p>
+    </div>
+
+    <div class="nb-ref">
+      <span class="nb-label">Notebook</span>
+      <a href="notebooks/pandas.ipynb">notebooks/pandas.ipynb</a>
+    </div>
+
+    <!-- ─── INTRODUCCIÓN ─── -->
+    <h2 id="intro">Introducción</h2>
+    <p><strong>Pandas</strong> es la librería de Python para manipulación y análisis de datos tabulares. Permite trabajar con tablas que tienen columnas de distintos tipos —números, texto, fechas— y con etiquetas que tienen significado propio. Sus dos estructuras principales son la <strong>Serie</strong> (una columna) y el <strong>DataFrame</strong> (una tabla completa), y ofrece herramientas para seleccionar, filtrar, transformar y agregar datos de forma eficiente.</p>
+
+    <!-- ─── SERIES ─── -->
+    <h2 id="series">Series</h2>
+    <p>Una <strong>Serie</strong> es la estructura de datos unidimensional de pandas. Piensa en ella como un array de NumPy al que se le agrega un índice: cada valor tiene una etiqueta asociada.</p>
+
+    <h3 id="crear-serie">Desde una lista</h3>
+    <p>Si no especificas un índice, pandas asigna enteros comenzando desde 0 — igual que NumPy, pero ahora con nombre.</p>
+    <pre><code class="language-python">import pandas as pd
+
+calificaciones = pd.Series([88, 72, 95, 60, 83])
+print(calificaciones)
+# 0    88
+# 1    72
+# 2    95
+# 3    60
+# 4    83
+# dtype: int64</code></pre>
+
+    <p>La columna izquierda es el <strong>índice</strong>; la derecha, los <strong>valores</strong>. El tipo de dato aparece al final.</p>
+
+    <h3 id="serie-dict">Desde un diccionario</h3>
+    <p>Cuando creas una Serie desde un diccionario, las llaves se convierten automáticamente en el índice.</p>
+    <pre><code class="language-python">calificaciones = pd.Series({
+    "Ana":    88,
+    "Luis":   72,
+    "Mía":    95,
+    "Carlos": 60,
+    "Sara":   83,
+})
+print(calificaciones)
+# Ana       88
+# Luis      72
+# Mía       95
+# Carlos    60
+# Sara      83
+# dtype: int64
+
+# Acceder por etiqueta
+print(calificaciones["Ana"])           # 88
+print(calificaciones[["Ana", "Mía"]]) # Ana 88, Mía 95</code></pre>
+
+    <!-- ─── INDEX ─── -->
+    <h2 id="index">El índice (Index)</h2>
+    <p>El <strong>índice</strong> es la etiqueta que pandas asocia a cada fila. No es una columna más: es la clave de identidad de cada elemento. Por defecto es un rango entero (0, 1, 2…), pero puede ser cualquier valor: nombres, fechas, categorías.</p>
+
+    <div class="def">
+      <div class="def-label">¿Para qué sirve el índice?</div>
+      <p>El índice permite acceder a filas por etiqueta (no por posición), alinear automáticamente Series de distintos tamaños al operar entre ellas, y combinar tablas usando una clave común — similar a un JOIN en SQL.</p>
+    </div>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Índice personalizado y alineación automática</summary>
+      <div class="dbody">
+        <p>Cuando sumas dos Series con índices distintos, pandas alinea por etiqueta. Las etiquetas que no coinciden producen <code>NaN</code>.</p>
+        <pre><code class="language-python">a = pd.Series([10, 20, 30], index=["x", "y", "z"])
+b = pd.Series([1,  2,  3],  index=["y", "z", "w"])
+
+print(a + b)
+# w     NaN
+# x     NaN
+# y    22.0
+# z    33.0
+# dtype: float64</code></pre>
+        <p>Solo <code>y</code> y <code>z</code> están en ambas Series; <code>x</code> y <code>w</code> no tienen par y producen <code>NaN</code>.</p>
+
+        <p>Para inspeccionar y manipular el índice:</p>
+        <pre><code class="language-python">s = pd.Series([88, 72, 95], index=["Ana", "Luis", "Mía"])
+
+print(s.index)    # Index(['Ana', 'Luis', 'Mía'], dtype='object')
+print(s.values)   # array([88, 72, 95])
+
+# Reiniciar al índice entero por defecto
+s_reset = s.reset_index(drop=True)
+print(s_reset)
+# 0    88
+# 1    72
+# 2    95
+# dtype: int64</code></pre>
+      </div>
+    </details>
+
+    <!-- ─── MÉTODOS DE SERIES ─── -->
+    <h2 id="metodos-series">Métodos de Series</h2>
+    <p>Las Series tienen métodos para inspección estadística, transformación elemento a elemento y manejo de valores nulos.</p>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Inspección y estadísticas</summary>
+      <div class="dbody">
+        <pre><code class="language-python">notas = pd.Series([88, 72, 95, 60, 83, 72, 88])
+
+print(notas.describe())
+# count     7.000000
+# mean     79.714286
+# std      12.638...
+# min      60.000000
+# 25%      72.000000
+# 50%      83.000000
+# 75%      88.000000
+# max      95.000000
+
+print(notas.value_counts())
+# 88    2
+# 72    2
+# 95    1
+# 83    1
+# 60    1
+# dtype: int64
+
+print(notas.sort_values())                   # ascendente
+print(notas.sort_values(ascending=False))    # descendente</code></pre>
+      </div>
+    </details>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Transformación con map</summary>
+      <div class="dbody">
+        <p><code>map</code> aplica una función o un diccionario a cada elemento de la Serie.</p>
+        <pre><code class="language-python">notas = pd.Series([88, 72, 95, 60, 83])
+
+# map con función lambda
+letras = notas.map(lambda x: "A" if x >= 90 else ("B" if x >= 80 else "C"))
+print(letras)
+# 0    B
+# 1    C
+# 2    A
+# 3    C
+# 4    B
+# dtype: object
+
+# map con diccionario — útil para recodificar valores categóricos
+grupos = pd.Series(["A", "B", "A", "B", "A"])
+codigos = grupos.map({"A": 1, "B": 2})
+print(codigos)
+# 0    1
+# 1    2
+# 2    1
+# 3    2
+# 4    1
+# dtype: int64</code></pre>
+      </div>
+    </details>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Manejo de valores nulos</summary>
+      <div class="dbody">
+        <pre><code class="language-python">import numpy as np
+
+s = pd.Series([88, np.nan, 95, np.nan, 83])
+
+print(s.isna())
+# 0    False
+# 1     True
+# 2    False
+# 3     True
+# 4    False
+
+print(s.isna().sum())     # 2  → cantidad de nulos
+
+# Rellenar nulos con la media
+s_rellena = s.fillna(s.mean())
+print(s_rellena)
+# 0    88.000000
+# 1    88.666667
+# 2    95.000000
+# 3    88.666667
+# 4    83.000000
+
+# Eliminar elementos nulos
+s_limpia = s.dropna()
+print(s_limpia)
+# 0    88.0
+# 2    95.0
+# 4    83.0</code></pre>
+      </div>
+    </details>
+
+    <!-- ─── DATAFRAME ─── -->
+    <h2 id="dataframe">DataFrame</h2>
+    <p>Un <strong>DataFrame</strong> es la estructura bidimensional de pandas: una tabla con filas y columnas. Cada columna es una Serie y todas comparten el mismo índice. Internamente, es un diccionario ordenado de Series.</p>
+
+    <pre><code class="language-python">datos = {
+    "nombre":       ["Ana", "Luis", "Mía", "Carlos", "Sara"],
+    "calificacion": [88,    72,     95,    60,       83   ],
+    "horas":        [5.0,   3.5,    7.0,   2.0,      4.5  ],
+    "grupo":        ["A",   "B",    "A",   "B",      "A"  ],
+}
+
+df = pd.DataFrame(datos)
+print(df)
+#    nombre  calificacion  horas grupo
+# 0     Ana            88    5.0     A
+# 1    Luis            72    3.5     B
+# 2     Mía            95    7.0     A
+# 3  Carlos            60    2.0     B
+# 4    Sara            83    4.5     A</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Cargar datos desde archivo</summary>
+      <div class="dbody">
+        <p>En la práctica, los DataFrames casi siempre se cargan desde archivos externos:</p>
+        <pre><code class="language-python"># Desde un CSV
+df = pd.read_csv("data/csvs/examenes.csv")
+
+# Ver las primeras filas para confirmar que cargó bien
+print(df.head())</code></pre>
+      </div>
+    </details>
+
+    <!-- ─── PROPIEDADES ─── -->
+    <h2 id="propiedades">Propiedades del DataFrame</h2>
+    <p>Antes de manipular un DataFrame, siempre conviene conocer su forma, sus columnas y los tipos de cada variable.</p>
+
+    <pre><code class="language-python">print(df.shape)      # (5, 4)  → 5 filas, 4 columnas
+print(df.columns)    # Index(['nombre', 'calificacion', 'horas', 'grupo'], dtype='object')
+print(df.index)      # RangeIndex(start=0, stop=5, step=1)
+print(df.dtypes)
+# nombre           object
+# calificacion      int64
+# horas           float64
+# grupo            object
+# dtype: object</code></pre>
+
+    <!-- ─── MÉTODOS DE DATAFRAME ─── -->
+    <h2 id="metodos-df">Métodos de DataFrame</h2>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Inspección: info, describe, head, tail</summary>
+      <div class="dbody">
+        <pre><code class="language-python">df.info()
+# &lt;class 'pandas.core.frame.DataFrame'&gt;
+# RangeIndex: 5 entries, 0 to 4
+# Data columns (total 4 columns):
+#  #   Column        Non-Null Count  Dtype
+# ---  ------        --------------  -----
+#  0   nombre        5 non-null      object
+#  1   calificacion  5 non-null      int64
+#  2   horas         5 non-null      float64
+#  3   grupo         5 non-null      object
+
+df.describe()
+#        calificacion      horas
+# count      5.000000   5.000000
+# mean      79.600000   4.400000
+# std       13.114877   1.854724
+# min       60.000000   2.000000
+# 25%       72.000000   3.500000
+# 50%       83.000000   4.500000
+# 75%       88.000000   5.000000
+# max       95.000000   7.000000
+
+df.head(3)    # primeras 3 filas
+df.tail(2)    # últimas 2 filas</code></pre>
+      </div>
+    </details>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Limpieza: isnull, dropna, fillna</summary>
+      <div class="dbody">
+        <pre><code class="language-python">import numpy as np
+
+df_con_nulos = df.copy()
+df_con_nulos.loc[1, "calificacion"] = np.nan
+df_con_nulos.loc[3, "horas"]        = np.nan
+
+# Contar nulos por columna
+print(df_con_nulos.isnull().sum())
+# nombre          0
+# calificacion    1
+# horas           1
+# grupo           0
+
+# Eliminar filas con cualquier nulo
+df_limpio = df_con_nulos.dropna()
+
+# Rellenar nulos con la media de cada columna numérica
+df_relleno = df_con_nulos.fillna(df_con_nulos.mean(numeric_only=True))</code></pre>
+      </div>
+    </details>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Modificación: rename, drop, nueva columna</summary>
+      <div class="dbody">
+        <pre><code class="language-python"># Renombrar columnas
+df_renombrado = df.rename(columns={
+    "calificacion": "score",
+    "horas":        "study_hours",
+})
+
+# Eliminar columnas (axis=1) o filas (axis=0)
+df_sin_grupo = df.drop(columns=["grupo"])
+df_sin_fila0 = df.drop(index=0)
+
+# Agregar una columna calculada
+df["aprobado"] = df["calificacion"] >= 70
+print(df["aprobado"])
+# 0     True
+# 1     True
+# 2     True
+# 3    False
+# 4     True</code></pre>
+      </div>
+    </details>
+
+    <!-- ─── SELECCIÓN DE COLUMNAS ─── -->
+    <h2 id="columnas">Selección de columnas</h2>
+    <p>La forma en que seleccionas columnas determina qué tipo de objeto obtienes de regreso. La diferencia importa porque Series y DataFrames no tienen los mismos métodos disponibles.</p>
+
+    <div class="def">
+      <div class="def-label">Una columna vs múltiples columnas</div>
+      <p><code>df["columna"]</code> (un corchete) devuelve una <strong>Serie</strong>. <code>df[["col1", "col2"]]</code> (doble corchete, lista adentro) devuelve un <strong>DataFrame</strong>.</p>
+    </div>
+
+    <pre><code class="language-python"># Una columna → Serie
+notas = df["calificacion"]
+print(type(notas))       # &lt;class 'pandas.core.series.Series'&gt;
+print(notas.mean())      # 79.6
+
+# Múltiples columnas → DataFrame
+subconjunto = df[["nombre", "calificacion"]]
+print(type(subconjunto)) # &lt;class 'pandas.core.frame.DataFrame'&gt;
+print(subconjunto)
+#    nombre  calificacion
+# 0     Ana            88
+# 1    Luis            72
+# 2     Mía            95
+# 3  Carlos            60
+# 4    Sara            83</code></pre>
+
+    <!-- ─── FILTRADO DE FILAS ─── -->
+    <h2 id="filtrado">Filtrado de filas</h2>
+    <p>Para seleccionar filas que cumplan una condición se usan <strong>máscaras booleanas</strong>: una Serie de <code>True</code>/<code>False</code> del mismo largo que el DataFrame. Las filas marcadas con <code>True</code> se conservan.</p>
+
+    <div class="def">
+      <div class="def-label">Máscara booleana</div>
+      <p>Una condición como <code>df["calificacion"] &gt;= 80</code> no filtra por sí sola — produce una Serie de booleanos. El filtrado ocurre cuando esa máscara se pasa dentro de <code>df[...]</code>.</p>
+    </div>
+
+    <pre><code class="language-python"># Construir la máscara
+mascara = df["calificacion"] >= 80
+print(mascara)
+# 0     True
+# 1    False
+# 2     True
+# 3    False
+# 4     True
+# Name: calificacion, dtype: bool
+
+# Aplicarla para filtrar
+aprobados = df[mascara]
+print(aprobados)
+#   nombre  calificacion  horas grupo
+# 0    Ana            88    5.0     A
+# 2    Mía            95    7.0     A
+# 4   Sara            83    4.5     A
+
+# Forma compacta, en una línea
+aprobados = df[df["calificacion"] >= 80]</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Combinar condiciones con &amp;, | y ~</summary>
+      <div class="dbody">
+        <p>Usa <code>&amp;</code> (y), <code>|</code> (o) y <code>~</code> (no) para combinar condiciones. <strong>Cada condición individual debe ir entre paréntesis.</strong></p>
+        <pre><code class="language-python"># Grupo A AND calificación >= 80
+df[(df["grupo"] == "A") & (df["calificacion"] >= 80)]
+#   nombre  calificacion  horas grupo
+# 0    Ana            88    5.0     A
+# 2    Mía            95    7.0     A
+# 4   Sara            83    4.5     A
+
+# Grupo A OR calificación >= 90
+df[(df["grupo"] == "A") | (df["calificacion"] >= 90)]
+#   nombre  calificacion  horas grupo
+# 0    Ana            88    5.0     A
+# 2    Mía            95    7.0     A
+# 4   Sara            83    4.5     A
+
+# Negar con ~: estudiantes que NO son del grupo A
+df[~(df["grupo"] == "A")]
+#    nombre  calificacion  horas grupo
+# 1    Luis            72    3.5     B
+# 3  Carlos            60    2.0     B</code></pre>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> Por qué no usar <code>and</code> / <code>or</code> de Python</summary>
+      <div class="dbody">
+        <p>Los operadores <code>and</code>, <code>or</code> y <code>not</code> de Python operan sobre un solo valor booleano. Una máscara de pandas es una Serie de cientos o miles de booleanos, y Python no sabe cuál usar como representante de toda la Serie. El resultado es:</p>
+        <pre><code class="language-text">ValueError: The truth value of a Series is ambiguous.</code></pre>
+        <p>Los operadores <code>&amp;</code>, <code>|</code> y <code>~</code> son operadores bit a bit que pandas ha sobrecargado para operar <em>elemento por elemento</em> sobre Series — exactamente lo que necesitas al filtrar.</p>
+      </div>
+    </details>
+
+    <!-- ─── LOC E ILOC ─── -->
+    <h2 id="loc-iloc">loc e iloc</h2>
+    <p>Pandas ofrece dos indexadores especializados para seleccionar filas y columnas simultáneamente. La diferencia fundamental es en qué lenguaje le hablas a pandas para identificar lo que quieres.</p>
+
+    <h3 id="loc">.loc — por etiqueta</h3>
+    <p><code>.loc[filas, columnas]</code> usa <strong>etiquetas</strong>: nombres de índice y nombres de columnas. El slice con <code>:</code> es <strong>inclusivo en ambos extremos</strong>, a diferencia del slice de Python nativo.</p>
+
+    <pre><code class="language-python">df_named = df.set_index("nombre")   # nombres como índice de fila
+
+# Una fila → devuelve Serie
+print(df_named.loc["Ana"])
+# calificacion    88
+# horas            5.0
+# grupo            A
+
+# Varias filas
+print(df_named.loc[["Ana", "Mía"]])
+
+# Una celda específica
+print(df_named.loc["Ana", "calificacion"])   # 88
+
+# Slice de filas: "Luis" hasta "Carlos" (ambos incluidos)
+print(df_named.loc["Luis":"Carlos"])
+
+# Condición booleana — equivalente al filtrado con máscara
+print(df_named.loc[df_named["calificacion"] >= 80])</code></pre>
+
+    <h3 id="iloc">.iloc — por posición entera</h3>
+    <p><code>.iloc[filas, columnas]</code> usa <strong>posiciones enteras</strong> (0, 1, 2…), ignorando por completo las etiquetas. El slice es <strong>exclusivo en el extremo derecho</strong>, igual que Python nativo.</p>
+
+    <pre><code class="language-python"># Primera fila (posición 0)
+print(df.iloc[0])
+
+# Filas en posición 0 y 2
+print(df.iloc[[0, 2]])
+
+# Filas 1 y 2 (posición 3 excluida)
+print(df.iloc[1:3])
+
+# Fila 0, columna 1 (calificacion)
+print(df.iloc[0, 1])     # 88
+
+# Últimas 2 filas, primeras 3 columnas
+print(df.iloc[-2:, :3])</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> Comparación directa loc vs iloc</summary>
+      <div class="dbody">
+        <pre><code class="language-text">Operación                  loc (etiqueta)                iloc (posición)
+------------------------------------------------------------------------
+Una fila              df_named.loc["Ana"]           df.iloc[0]
+Una celda             df_named.loc["Ana","calif"]   df.iloc[0, 1]
+Rango de filas        df_named.loc["Ana":"Mía"]     df.iloc[0:3]  (3 excluido)
+Varias columnas       df_named.loc[:, ["a","b"]]    df.iloc[:, [0, 1]]
+Condición booleana    df_named.loc[df["x"] > 5]     No aplica</code></pre>
+
+        <p>Regla práctica: usa <code>loc</code> cuando tus índices tienen nombres significativos (fechas, IDs, nombres). Usa <code>iloc</code> cuando necesitas posiciones numéricas exactas, sin importar las etiquetas.</p>
+      </div>
+    </details>
+
+    <!-- ─── GROUPBY ─── -->
+    <h2 id="groupby">GroupBy</h2>
+    <p>Imagina que tienes una tabla de estudiantes y quieres el promedio de calificación por grupo. <strong>GroupBy</strong> hace exactamente eso: divide la tabla en subconjuntos según los valores de una columna, aplica una función a cada subconjunto, y combina los resultados.</p>
+
+    <div class="def">
+      <div class="def-label">Split → Apply → Combine</div>
+      <p><strong>Split:</strong> el DataFrame se divide en subgrupos según los valores únicos de la columna elegida. <strong>Apply:</strong> se calcula una función (media, suma, conteo…) dentro de cada subgrupo de forma independiente. <strong>Combine:</strong> los resultados de todos los grupos se unen en un nuevo DataFrame.</p>
+    </div>
+
+    <pre><code class="language-python"># Promedio de calificación por grupo
+print(df.groupby("grupo")["calificacion"].mean())
+# grupo
+# A    88.666667
+# B    66.000000
+# Name: calificacion, dtype: float64
+
+# Conteo de estudiantes por grupo
+print(df.groupby("grupo")["nombre"].count())
+# grupo
+# A    3
+# B    2
+# Name: nombre, dtype: int64
+
+# Múltiples métricas a la vez
+print(df.groupby("grupo")["calificacion"].agg(["mean", "min", "max"]))
+#        mean  min  max
+# grupo
+# A     88.67   83   95
+# B     66.00   60   72</code></pre>
+
+    <details class="ex">
+      <summary><span class="tag">Ejemplo</span> agg con nombres personalizados</summary>
+      <div class="dbody">
+        <p>Puedes nombrar cada métrica resultante usando la sintaxis <code>nombre_col = ("columna", "función")</code> dentro de <code>agg()</code>.</p>
+        <pre><code class="language-python">resumen = df.groupby("grupo").agg(
+    promedio_nota  = ("calificacion", "mean"),
+    nota_maxima    = ("calificacion", "max"),
+    horas_promedio = ("horas",        "mean"),
+    n_estudiantes  = ("nombre",       "count"),
+)
+print(resumen)
+#        promedio_nota  nota_maxima  horas_promedio  n_estudiantes
+# grupo
+# A          88.666667           95        5.500000              3
+# B          66.000000           72        2.750000              2</code></pre>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span class="tag">Profundización</span> GroupBy por múltiples columnas y reset_index</summary>
+      <div class="dbody">
+        <p>Puedes agrupar por más de una columna pasando una lista. El resultado tiene un <strong>MultiIndex</strong> en las filas; usa <code>reset_index()</code> para convertirlo en columnas normales.</p>
+        <pre><code class="language-python">datos2 = {
+    "nombre":       ["Ana", "Luis", "Mía", "Carlos", "Sara", "Juan"],
+    "calificacion": [88,    72,     95,    60,       83,     77   ],
+    "grupo":        ["A",   "B",    "A",   "B",      "A",    "A"  ],
+    "turno":        ["M",   "M",    "T",   "T",      "M",    "T"  ],
+}
+df2 = pd.DataFrame(datos2)
+
+resultado = df2.groupby(["grupo", "turno"])["calificacion"].mean()
+print(resultado)
+# grupo  turno
+# A      M        85.5
+#        T        89.0
+# B      M        72.0
+#        T        60.0
+# Name: calificacion, dtype: float64
+
+# Aplanar el MultiIndex en columnas normales
+resultado = resultado.reset_index()
+print(resultado)
+#   grupo turno  calificacion
+# 0     A     M          85.5
+# 1     A     T          89.0
+# 2     B     M          72.0
+# 3     B     T          60.0</code></pre>
+      </div>
+    </details>
+
+  </main>
+</div>
+
+<script>
+  hljs.highlightAll();
+  const heads = document.querySelectorAll('h2[id],h3[id]');
+  const links = document.querySelectorAll('.toc-sidebar a');
+  const obs = new IntersectionObserver(e => {
+    e.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.toc-sidebar a[href="#${en.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-15% 0px -70% 0px'});
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>
