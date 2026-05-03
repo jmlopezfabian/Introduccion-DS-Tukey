@@ -33,7 +33,7 @@ st.bar_chart(frecuencias, color='#28327A')
 
 grafico = st.selectbox("Elige el grafico: ", ["hist", "boxplot"])
 
-if grafico == "hist":
-    # Logica para hacer un histograma
-else:
-    # Logica para hacer un boxplot
+#if grafico == "hist":
+#    # Logica para hacer un histograma
+#else:
+#    # Logica para hacer un boxplot
